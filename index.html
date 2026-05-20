@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>IDM·OB Multi-TF Screener</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f1f3f9;--card:#fff;--border:#e6e8f0;--border2:#d0d4e0;
+  --txt:#0d1117;--txt2:#64748b;--txt3:#94a3b8;--hover:#f8f9fc;
+  --g:#10b981;--gbg:#ecfdf5;--gbr:#a7f3d0;
+  --r:#ef4444;--rbg:#fef2f2;--rbr:#fca5a5;
+  --y:#f59e0b;--ybg:#fffbeb;--ybr:#fde68a;
+  --b:#3b82f6;--bbg:#eff6ff;--bbr:#bfdbfe;
+  --p:#8b5cf6;--pbg:#f5f3ff;--pbr:#ddd6fe;
+  --sol:#9945ff;
+  --c5m:#10b981;--c15m:#3b82f6;--c1h:#f59e0b;
+  --nav:220px;--top:52px;
+  --font:'Inter',sans-serif;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --sh2:0 4px 20px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--font);font-size:13px;background:var(--bg);color:var(--txt);overflow:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:6px}
+button,select{font-family:var(--font)}
+
+/* ── APP SHELL ── */
+.app{display:flex;height:100vh}
+
+/* ── LEFT NAV ── */
+.nav{width:var(--nav);flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:100}
+.nav-logo{height:var(--top);display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo-bars{display:flex;align-items:flex-end;gap:2px;height:20px}
+.lb{width:3.5px;border-radius:2px 2px 0 0;animation:lba 2.4s ease-in-out infinite}
+.lb:nth-child(1){height:9px;background:var(--r);animation-delay:.0s}
+.lb:nth-child(2){height:16px;background:var(--g);animation-delay:.3s}
+.lb:nth-child(3){height:20px;background:var(--g);animation-delay:.6s}
+.lb:nth-child(4){height:12px;background:var(--r);animation-delay:.9s}
+@keyframes lba{0%,100%{opacity:.4}50%{opacity:1}}
+.logo-text{font-size:14px;font-weight:700;letter-spacing:-.3px}
+.logo-text em{color:var(--b);font-style:normal}
+.logo-sub{font-size:9px;color:var(--txt3);letter-spacing:.5px}
+.nav-group{padding:12px 8px 4px}
+.nav-group-label{font-size:9px;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;padding:0 8px 4px}
+.nav-link{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:7px;font-size:12px;font-weight:500;color:var(--txt2);cursor:pointer;transition:all .12s;white-space:nowrap}
+.nav-link:hover{background:var(--hover);color:var(--txt)}
+.nav-link.on{background:var(--bbg);color:var(--b);font-weight:600}
+.nav-link svg{width:15px;height:15px;flex-shrink:0;opacity:.6}
+.nav-link.on svg,.nav-link:hover svg{opacity:1}
+.nav-badge{margin-left:auto;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px}
+.nb-g{background:var(--gbg);color:var(--g);border:1px solid var(--gbr)}
+.nb-r{background:var(--rbg);color:var(--r);border:1px solid var(--rbr)}
+.nb-b{background:var(--bbg);color:var(--b);border:1px solid var(--bbr)}
+.nb-y{background:var(--ybg);color:var(--y);border:1px solid var(--ybr)}
+.nav-bottom{margin-top:auto;padding:12px 8px;border-top:1px solid var(--border)}
+.sol-pill{display:flex;align-items:center;gap:7px;padding:8px 10px;background:var(--pbg);border:1px solid var(--pbr);border-radius:8px;font-size:11px;font-weight:600;color:var(--sol)}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--sol);flex-shrink:0;animation:sdg 2s ease-in-out infinite}
+@keyframes sdg{0%,100%{box-shadow:0 0 0 0 rgba(153,69,255,.5)}50%{box-shadow:0 0 0 5px rgba(153,69,255,0)}}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--top);flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px}
+.tb-title{font-size:14px;font-weight:700}
+.tb-sub{font-size:11px;color:var(--txt3)}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:7px}
+.live-chip{display:flex;align-items:center;gap:5px;background:var(--gbg);border:1px solid var(--gbr);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--g)}
+.ld{width:5px;height:5px;border-radius:50%;background:var(--g);animation:ldg 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes ldg{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{box-shadow:0 0 0 5px rgba(16,185,129,0)}}
+#cd{font-weight:700;min-width:18px}
+.btn{height:30px;padding:0 12px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--txt2);font-size:11px;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .12s;cursor:pointer}
+.btn:hover{background:var(--hover);color:var(--txt);border-color:var(--border2)}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.btn.pri{background:var(--b);border-color:var(--b);color:#fff}
+.btn.pri:hover{background:#2563eb}
+.btn.ico{width:30px;padding:0;justify-content:center;font-size:14px}
+
+/* ── PROGRESS ── */
+.prog{height:2px;background:var(--border);position:relative;overflow:hidden;flex-shrink:0}
+.pf{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--b),#60a5fa);transition:width .35s;width:0}
+.ps{position:absolute;left:-50%;top:0;height:100%;width:50%;background:linear-gradient(90deg,transparent,var(--b),transparent);animation:sw 1.1s ease-in-out infinite;display:none}
+@keyframes sw{from{left:-50%}to{left:100%}}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow:auto;display:flex;flex-direction:column}
+
+/* ── STATS CARDS ── */
+.stats-row{display:grid;gap:12px;padding:16px 18px 0;flex-shrink:0;grid-template-columns:repeat(6,1fr)}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--sh)}
+.sc-label{font-size:10px;font-weight:600;color:var(--txt3);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.sc-tf-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sc-val{font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1}
+.sc-sub{font-size:10px;color:var(--txt3);display:flex;gap:5px}
+.sc-pill{display:inline-flex;align-items:center;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700}
+.pill-g{background:var(--gbg);color:var(--g)}.pill-r{background:var(--rbg);color:var(--r)}
+.pill-b{background:var(--bbg);color:var(--b)}.pill-y{background:var(--ybg);color:var(--y)}
+
+/* ── BODY SPLIT ── */
+.body-split{display:flex;flex:1;gap:0;overflow:hidden;margin-top:12px;min-height:0}
+
+/* ── SCREENER PANEL ── */
+.screener{flex:1;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px 0 0 0;margin-left:18px;overflow:hidden;min-width:0;box-shadow:var(--sh)}
+
+/* ── TF TABS BAR ── */
+.tf-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--card)}
+.tf-tab{display:flex;align-items:center;gap:7px;padding:11px 18px;font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;color:var(--txt2);white-space:nowrap;user-select:none}
+.tf-tab:hover{color:var(--txt)}
+.tf-tab.active-5m{color:var(--c5m);border-bottom-color:var(--c5m)}
+.tf-tab.active-15m{color:var(--c15m);border-bottom-color:var(--c15m)}
+.tf-tab.active-1h{color:var(--c1h);border-bottom-color:var(--c1h)}
+.tf-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;display:flex;gap:4px}
+.tb-5m{background:var(--gbg);color:var(--g);border:1px solid var(--gbr)}
+.tb-15m{background:var(--bbg);color:var(--b);border:1px solid var(--bbr)}
+.tb-1h{background:var(--ybg);color:var(--y);border:1px solid var(--ybr)}
+.tf-tabs-right{margin-left:auto;display:flex;align-items:center;padding:0 14px;gap:8px}
+
+/* ── PANEL TOOLBAR ── */
+.panel-head{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px;flex-wrap:wrap;background:var(--card)}
+.tf-label{font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px;flex-shrink:0}
+.tfl-5m{background:var(--gbg);color:var(--g);border:1px solid var(--gbr)}
+.tfl-15m{background:var(--bbg);color:var(--b);border:1px solid var(--bbr)}
+.tfl-1h{background:var(--ybg);color:var(--y);border:1px solid var(--ybr)}
+.panel-desc{font-size:11px;color:var(--txt3)}
+.filter-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:2px;gap:2px}
+.fs-btn{padding:3px 10px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--txt2);cursor:pointer;border-radius:4px;font-family:var(--font);transition:all .12s}
+.fs-btn:hover{color:var(--txt);background:rgba(0,0,0,.04)}
+.fs-on-all{background:var(--card);color:var(--txt);font-weight:600;box-shadow:var(--sh)}
+.fs-on-bull{background:var(--g);color:#fff;font-weight:600}
+.fs-on-bear{background:var(--r);color:#fff;font-weight:600}
+.flt{display:flex;align-items:center;gap:4px}
+.flt label{font-size:10px;font-weight:500;color:var(--txt2)}
+select{font-size:11px;font-weight:500;padding:4px 20px 4px 7px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--txt);cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%2394a3b8' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
+.ph-right{margin-left:auto;font-size:11px;color:var(--txt3)}
+
+/* ── TABLE ── */
+.tscroll{flex:1;overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead{position:sticky;top:0;z-index:10}
+thead tr{background:var(--card);border-bottom:1px solid var(--border)}
+th{padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;user-select:none;border-right:1px solid var(--border);transition:color .12s}
+th:last-child{border-right:none}
+th:hover{color:var(--txt2)}
+th.srt{color:var(--b)}
+.arr{margin-left:3px;opacity:.3;font-size:8px}
+th.srt .arr{opacity:1}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--hover)}
+tbody tr.sel{background:var(--bbg)!important;border-left:2px solid var(--b)}
+tbody tr.nr{animation:nr .5s ease}
+@keyframes nr{from{background:#ecfdf5}to{background:transparent}}
+tbody tr.stale{opacity:.4;filter:saturate(.2)}
+td{padding:8px 12px;font-size:12px;vertical-align:middle;border-right:1px solid var(--border);white-space:nowrap}
+td:last-child{border-right:none}
+
+/* ── CELLS ── */
+.tcell{display:flex;align-items:center;gap:9px}
+.timg{width:26px;height:26px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--txt2);flex-shrink:0;overflow:hidden}
+.timg img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.tsym{font-weight:700;font-size:12px}.tpair{font-size:10px;color:var(--txt3);margin-top:1px}
+.tag{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;border:1px solid;vertical-align:middle;margin-left:4px}
+.t-new{background:var(--gbg);color:var(--g);border-color:var(--gbr)}
+.t-sweep{background:var(--pbg);color:var(--p);border-color:var(--pbr)}
+.t-vsp{background:#fff7ed;color:#ea580c;border-color:#fed7aa}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid}
+.b-bull{background:var(--gbg);color:var(--g);border-color:var(--gbr)}
+.b-bear{background:var(--rbg);color:var(--r);border-color:var(--rbr)}
+.up{color:var(--g);font-weight:500}.dn{color:var(--r);font-weight:500}.neu{color:var(--txt2)}
+
+/* ── MINI OB ── */
+.obm{width:56px;height:20px;background:var(--bg);border-radius:3px;position:relative;overflow:hidden;border:1px solid var(--border)}
+.omg{position:absolute;left:0;right:0;background:rgba(16,185,129,.1);border-top:1px solid rgba(16,185,129,.25);border-bottom:1px solid rgba(16,185,129,.25)}
+.omr{position:absolute;left:0;right:0;background:rgba(239,68,68,.1);border-top:1px solid rgba(239,68,68,.25);border-bottom:1px solid rgba(239,68,68,.25)}
+.oil{position:absolute;left:0;right:0;height:1px}
+.opm{position:absolute;width:5px;height:5px;border-radius:50%;top:50%;transform:translateY(-50%);border:1px solid var(--card)}
+
+/* ── SCORE ── */
+.scw{display:flex;align-items:center;gap:5px}
+.scbg{width:44px;height:3px;background:var(--border);border-radius:3px;overflow:hidden}
+.scf{height:100%;border-radius:3px}
+.scn{font-size:11px;font-weight:700;min-width:22px}
+.bsw{display:flex;flex-direction:column;gap:2px}
+.bsn{font-size:11px;font-weight:700}
+.bsbar{display:flex;height:2px;border-radius:2px;overflow:hidden;width:44px}
+.bsbuy{background:var(--g)}.bssell{background:var(--r)}
+
+/* ── SPARK ── */
+.spark{width:64px;height:22px;display:block}
+
+/* ── STATE / SCAN ── */
+.stbox{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:10px;color:var(--txt2);padding:40px;text-align:center}
+.sticon{font-size:32px;opacity:.15}.sttxt{font-size:13px;font-weight:500}.stsub{font-size:11px;color:var(--txt3);max-width:260px;line-height:1.6}
+.spin{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--b);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0}
+@keyframes rot{to{transform:rotate(360deg)}}
+.sov{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:9px;font-size:11px;color:var(--txt2);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.sov-t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── DETAIL PANEL ── */
+.detail{width:260px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:0 10px 0 0;margin-right:18px;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--sh)}
+.detail-head{height:var(--top);display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--border);flex-shrink:0;gap:6px}
+.detail-title{font-size:12px;font-weight:700;flex:1}
+.dbody{flex:1;overflow-y:auto}
+.dempty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--txt3);font-size:11px;text-align:center;padding:16px}
+.dempty-ico{font-size:26px;opacity:.2}
+.dsec{padding:10px 14px;border-bottom:1px solid var(--border)}
+.dtit{font-size:9px;font-weight:700;color:var(--txt3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+.dk{font-size:11px;color:var(--txt2)}.dv{font-size:11px;font-weight:600}
+.ob-chart{width:100%;height:76px;background:var(--bg);border-radius:7px;border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:8px}
+.ocz{position:absolute;left:0;right:0}
+.oczg{background:rgba(16,185,129,.1);border-top:1px solid rgba(16,185,129,.25);border-bottom:1px solid rgba(16,185,129,.25)}
+.oczr{background:rgba(239,68,68,.1);border-top:1px solid rgba(239,68,68,.25);border-bottom:1px solid rgba(239,68,68,.25)}
+.ocidm{position:absolute;left:0;right:0;height:1.5px}
+.octag{position:absolute;left:5px;font-size:8px;font-weight:700;padding:1px 3px;border-radius:2px}
+.ocprice{position:absolute;display:flex;align-items:center;gap:3px;top:50%;transform:translateY(-50%)}
+.ocdot{width:8px;height:8px;border-radius:50%;border:2px solid var(--card)}
+.oclbl{font-size:9px;font-weight:700}
+.ocax{position:absolute;right:4px;font-size:8px;color:var(--txt3)}
+.sigtag{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;border:1px solid;display:inline-flex;align-items:center;margin:2px}
+.sig-g{background:var(--gbg);color:var(--g);border-color:var(--gbr)}
+.sig-r{background:var(--rbg);color:var(--r);border-color:var(--rbr)}
+.sig-b{background:var(--bbg);color:var(--b);border-color:var(--bbr)}
+.sig-p{background:var(--pbg);color:var(--p);border-color:var(--pbr)}
+
+/* ── LIVE LAUNCHES ── */
+.launches{flex-shrink:0;height:190px;background:var(--card);border-top:1px solid var(--border);display:flex;flex-direction:column}
+.lh{display:flex;align-items:center;padding:8px 18px;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px}
+.lh-title{font-size:12px;font-weight:700;color:var(--txt)}
+.src-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid}
+.sc-pump{background:var(--pbg);color:var(--sol);border-color:var(--pbr)}
+.sc-dex{background:var(--bbg);color:var(--b);border-color:var(--bbr)}
+.lchip-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:ldg 1.2s ease-in-out infinite;flex-shrink:0}
+.lf-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:1px;gap:1px}
+.lf-btn{padding:3px 9px;font-size:10px;font-weight:600;border:none;background:transparent;color:var(--txt2);cursor:pointer;border-radius:4px;font-family:var(--font);transition:all .12s}
+.lf-btn.on{background:var(--card);color:var(--txt);box-shadow:var(--sh)}
+.lh-right{margin-left:auto;font-size:10px;color:var(--txt3);display:flex;gap:8px}
+.lscroll{flex:1;overflow-x:auto;overflow-y:hidden;display:flex;align-items:stretch;padding:8px 16px;gap:8px}
+.lscroll::-webkit-scrollbar{height:3px}
+.ct{flex-shrink:0;width:148px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 10px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:4px;animation:ctIn .3s ease;position:relative}
+@keyframes ctIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.ct:hover{border-color:var(--border2);box-shadow:var(--sh);transform:translateY(-1px)}
+.ct.cpump{border-top:2px solid var(--sol)}.ct.cdex{border-top:2px solid var(--b)}
+.ct-h{display:flex;align-items:center;gap:6px}
+.ct-img{width:22px;height:22px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--txt2);flex-shrink:0;overflow:hidden}
+.ct-img img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.ct-sym{font-size:11px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt)}
+.ct-src{font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px}
+.ct-src-p{background:var(--pbg);color:var(--sol)}.ct-src-d{background:var(--bbg);color:var(--b)}
+.ct-age{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block}
+.ca-hot{background:#fff7ed;color:#ea580c}.ca-warm{background:var(--gbg);color:var(--g)}.ca-cool{background:var(--hover);color:var(--txt3)}
+.ct-mc{font-size:9px;color:var(--txt2)}.ct-liq{font-size:9px;color:var(--g);font-weight:600}
+.ct-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:2px}
+.ct-bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g),#34d399)}
+.ct-arr{position:absolute;top:5px;right:7px;font-size:9px;color:var(--txt3);opacity:0;transition:opacity .15s}
+.ct:hover .ct-arr{opacity:.6}
+.lempty{display:flex;align-items:center;gap:8px;color:var(--txt3);font-size:11px}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:16px;right:16px;z-index:999;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.toast{background:var(--txt);color:#fff;padding:9px 13px;border-radius:8px;font-size:11px;font-weight:500;box-shadow:var(--sh2);animation:toa .25s ease;max-width:280px;display:flex;align-items:center;gap:7px}
+.toast.tg{background:#065f46}.toast.tr{background:#991b1b}.toast.ty{background:#92400e}
+@keyframes toa{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CHOCH SECTION ── */
+.choch-view{display:none;flex-direction:column;flex:1;overflow:hidden}
+.choch-head{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:9px 14px;gap:8px;flex-wrap:wrap}
+.choch-title{font-size:12px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:7px}
+.choch-info-box{background:var(--rbg);border:1px solid var(--rbr);border-radius:7px;padding:6px 12px;font-size:10px;color:var(--r);font-weight:500;line-height:1.5;flex-shrink:0}
+.choch-filter-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:2px;gap:2px}
+.choch-btn{padding:3px 10px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--txt2);cursor:pointer;border-radius:4px;font-family:var(--font);transition:all .12s}
+.choch-btn:hover{color:var(--txt);background:rgba(0,0,0,.04)}
+.choch-btn.chon-all{background:var(--card);color:var(--txt);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.choch-btn.chon-fresh{background:var(--r);color:#fff;font-weight:700}
+.choch-btn.chon-forming{background:var(--y);color:#fff;font-weight:700}
+.choch-struct{display:flex;align-items:flex-end;gap:1px;height:32px;flex-shrink:0}
+.cs-bar{width:6px;border-radius:1px 1px 0 0}
+.cs-wick{position:absolute;left:50%;transform:translateX(-50%);width:1px;opacity:.4}
+.choch-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700;border:1px solid}
+.choch-fresh{background:#fef2f2;color:#b91c1c;border-color:#fca5a5}
+.choch-forming{background:#fffbeb;color:#92400e;border-color:#fde68a}
+.choch-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:ldg 1.2s ease-in-out infinite}
+.choch-level-bar{width:100%;height:2px;background:var(--border);border-radius:2px;position:relative;margin:3px 0}
+.choch-level-fill{position:absolute;left:0;top:0;height:100%;border-radius:2px;background:var(--r)}
+.choch-level-dot{position:absolute;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;border:1.5px solid var(--card)}
+
+/* ── SWEEP SECTION ── */
+.sweep-view{display:none;flex-direction:column;flex:1;overflow:hidden}
+.sweep-head{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:9px 14px;gap:8px;flex-wrap:wrap}
+.sweep-title{font-size:12px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:7px}
+.sweep-badge{padding:3px 9px;border-radius:5px;font-size:10px;font-weight:700;border:1px solid}
+.sw-swept{background:#fef2f2;color:#b91c1c;border-color:#fca5a5}
+.sw-bounce{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+.sw-approach{background:#fffbeb;color:#92400e;border-color:#fde68a}
+.sw-filter-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:2px;gap:2px}
+.sw-btn{padding:3px 10px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--txt2);cursor:pointer;border-radius:4px;font-family:var(--font);transition:all .12s}
+.sw-btn:hover{color:var(--txt);background:rgba(0,0,0,.04)}
+.sw-btn.sw-on{background:var(--card);color:var(--txt);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.sw-btn.sw-on-swept{background:var(--r);color:#fff;font-weight:700}
+.sw-btn.sw-on-bounce{background:var(--g);color:#fff;font-weight:700}
+.candle-viz{display:flex;align-items:flex-end;gap:2px;height:28px;flex-shrink:0}
+.cv-bar{width:7px;border-radius:1px 1px 0 0;position:relative}
+.cv-wick{position:absolute;left:50%;transform:translateX(-50%);width:1px;background:currentColor;opacity:.4}
+.status-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700;border:1px solid}
+.sp-swept{background:#fef2f2;color:#b91c1c;border-color:#fca5a5}
+.sp-bounce{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+.sp-approach{background:#fffbeb;color:#92400e;border-color:#fde68a}
+.sp-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:ldg 1.2s ease-in-out infinite}
+.age-chip{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700}
+.ac-new{background:#fff7ed;color:#ea580c}
+.ac-recent{background:var(--gbg);color:var(--g)}
+.ac-old{background:var(--hover);color:var(--txt3)}
+
+/* ── DEBUG ── */
+.dbgp{position:fixed;bottom:0;left:0;right:0;height:130px;background:rgba(10,12,16,.97);border-top:1px solid #1e2430;font-size:10px;color:#3d5c3d;padding:5px 12px;overflow-y:auto;z-index:600;display:none;font-family:monospace}
+.dbgp.show{display:block}
+.dbgh{display:flex;justify-content:space-between;margin-bottom:3px;color:#a08030;font-size:9px;font-weight:700}
+#dlog div{padding:1px 0;border-bottom:1px solid rgba(255,255,255,.02);line-height:1.5}
+#dlog .ok{color:#1a6a30}#dlog .er{color:#8a1a1a}#dlog .wn{color:#7a4a10}#dlog .in{color:#1a3a6a}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){.detail{display:none}.screener{border-radius:10px 10px 0 0;margin-right:18px}}
+@media(max-width:700px){.stats-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.nav{position:fixed;left:0;top:0;bottom:0;z-index:300;transform:translateX(-100%)}.nav.open{transform:translateX(0)}.menuBtn{display:flex!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- LEFT NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">
+    <div class="logo-bars"><div class="lb"></div><div class="lb"></div><div class="lb"></div><div class="lb"></div></div>
+    <div><div class="logo-text">IDM<em>·</em>OB</div><div class="logo-sub">MULTI-TF SCREENER</div></div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Timeframes</div>
+    <div class="nav-link on" id="nl5m" onclick="switchTF('5m')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l2 2"/></svg>
+      5 Min<span class="nav-badge nb-g" id="nb5m">0</span>
+    </div>
+    <div class="nav-link" id="nl15m" onclick="switchTF('15m')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l2 2"/></svg>
+      15 Min<span class="nav-badge nb-b" id="nb15m">0</span>
+    </div>
+    <div class="nav-link" id="nl1h" onclick="switchTF('1h')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l2 2"/></svg>
+      1 Hour<span class="nav-badge nb-y" id="nb1h">0</span>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Direction</div>
+    <div class="nav-link" onclick="setMode('bull')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l5-8 5 8"/></svg>
+      Bull OB
+    </div>
+    <div class="nav-link" onclick="setMode('bear')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4l5 8 5-8"/></svg>
+      Bear OB
+    </div>
+    <div class="nav-link" onclick="setMode('all')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M8 3l4 5M8 13l4-5"/></svg>
+      Both
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Tools</div>
+    <div class="nav-link" onclick="exportCSV()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M3 12h10"/></svg>
+      Export CSV
+    </div>
+    <div class="nav-link" onclick="toggleDebug()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 1.5"/></svg>
+      Debug Log
+    </div>
+    <div class="nav-link" id="nlSignals" onclick="switchTF('signals')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l3-5 2 2 3-6 3 4"/><circle cx="13" cy="3" r="2" fill="currentColor" opacity=".7"/></svg>
+      SMC Signals <span class="nav-badge" id="nbSignals" style="background:var(--rbg);color:var(--r);border:1px solid var(--rbr)">0</span>
+    </div>
+    <div class="nav-link" onclick="window.open('https://dexscreener.com','_blank')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l4-4 3 3 5-6"/></svg>
+      DexScreener ↗
+    </div>
+  </div>
+
+  <div class="nav-bottom">
+    <div class="sol-pill"><span class="sdot"></span>Solana · No Age Filter</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="btn ico menuBtn" onclick="document.getElementById('nav').classList.toggle('open')" style="display:none">☰</button>
+    <div><div class="tb-title">IDM Order Block Screener</div></div>
+    <span class="tb-sub">· Multi-Timeframe · All Coins</span>
+    <div class="tb-r">
+      <div class="live-chip"><span class="ld"></span>Scan in <span id="cd">30</span>s</div>
+      <div class="flt"><label>Min Liq</label>
+        <select id="minLiq"><option value="0">Any</option><option value="1000" selected>$1K+</option><option value="5000">$5K+</option><option value="10000">$10K+</option></select>
+      </div>
+      <div class="flt"><label>Swing</label>
+        <select id="minSwing"><option value="1" selected>1%+</option><option value="2">2%+</option><option value="5">5%+</option></select>
+      </div>
+      <button class="btn pri" id="scanBtn" onclick="manualScan()"><span id="sbi">↻</span><span id="sbt">Scan Now</span></button>
+      <button class="btn ico" onclick="toggleDebug()">⚙</button>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog"><div class="pf" id="pf"></div><div class="ps" id="ps"></div></div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="content">
+
+    <!-- STATS CARDS -->
+    <div class="stats-row">
+      <div class="stat-card" style="cursor:pointer" onclick="switchTF('5m')">
+        <div class="sc-label"><span class="sc-tf-dot" style="background:var(--c5m)"></span>5M Setups</div>
+        <div class="sc-val" id="st5val" style="color:var(--c5m)">—</div>
+        <div class="sc-sub"><span class="sc-pill pill-g" id="st5bull">▲ 0</span><span class="sc-pill pill-r" id="st5bear">▼ 0</span></div>
+      </div>
+      <div class="stat-card" style="cursor:pointer" onclick="switchTF('15m')">
+        <div class="sc-label"><span class="sc-tf-dot" style="background:var(--c15m)"></span>15M Setups</div>
+        <div class="sc-val" id="st15val" style="color:var(--c15m)">—</div>
+        <div class="sc-sub"><span class="sc-pill pill-g" id="st15bull">▲ 0</span><span class="sc-pill pill-r" id="st15bear">▼ 0</span></div>
+      </div>
+      <div class="stat-card" style="cursor:pointer" onclick="switchTF('1h')">
+        <div class="sc-label"><span class="sc-tf-dot" style="background:var(--c1h)"></span>1H Setups</div>
+        <div class="sc-val" id="st1hval" style="color:var(--c1h)">—</div>
+        <div class="sc-sub"><span class="sc-pill pill-g" id="st1hbull">▲ 0</span><span class="sc-pill pill-r" id="st1hbear">▼ 0</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">Total Setups</div>
+        <div class="sc-val" id="stTotal">—</div>
+        <div class="sc-sub" id="stScanned">Waiting…</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">Best Signal</div>
+        <div class="sc-val" id="stBest" style="font-size:14px">—</div>
+        <div class="sc-sub" id="stBestSub">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">New Launches</div>
+        <div class="sc-val" id="stLaunch" style="color:var(--p)">0</div>
+        <div class="sc-sub">Pump.fun + Dex live</div>
+      </div>
+    </div>
+
+    <!-- BODY SPLIT -->
+    <div class="body-split">
+
+      <!-- SCREENER -->
+      <div class="screener">
+
+        <!-- TF TABS -->
+        <div class="tf-tabs">
+          <div class="tf-tab active-5m" id="tab5m" onclick="switchTF('5m')">
+            5 Min
+            <div class="tf-badge tb-5m" id="tbadge5m"><span id="tbc5bull">▲0</span><span id="tbc5bear">▼0</span></div>
+          </div>
+          <div class="tf-tab" id="tab15m" onclick="switchTF('15m')">
+            15 Min
+            <div class="tf-badge tb-15m" id="tbadge15m"><span id="tbc15bull">▲0</span><span id="tbc15bear">▼0</span></div>
+          </div>
+          <div class="tf-tab" id="tab1h" onclick="switchTF('1h')">
+            1 Hour
+            <div class="tf-badge tb-1h" id="tbadge1h"><span id="tbc1hbull">▲0</span><span id="tbc1hbear">▼0</span></div>
+          </div>
+          <div class="tf-tab" id="tabSignals" onclick="switchTF('signals')" style="border-bottom-color:transparent">
+            🎯 SMC Signals
+            <div class="tf-badge" id="tbadgeSignals" style="background:var(--rbg);color:var(--r);border:1px solid var(--rbr)"><span id="tbcSignals">0</span></div>
+          </div>
+          <div class="tf-tabs-right">
+            <span style="font-size:10px;color:var(--txt3)" id="tblInfo">—</span>
+          </div>
+        </div>
+
+        <!-- PANEL TOOLBAR -->
+        <div class="panel-head">
+          <span class="tf-label tfl-5m" id="tfLabel">5M</span>
+          <span class="panel-desc" id="panelDesc">m5 touch · h1 structure · all coins</span>
+          <div class="filter-seg">
+            <button class="fs-btn fs-on-all" id="fAll" onclick="setMode('all')">All</button>
+            <button class="fs-btn" id="fBull" onclick="setMode('bull')">▲ Bull</button>
+            <button class="fs-btn" id="fBear" onclick="setMode('bear')">▼ Bear</button>
+          </div>
+          <div class="ph-right" id="rowCount">—</div>
+        </div>
+
+        <!-- TABLE CONTAINER -->
+        <div class="tscroll" id="tscroll">
+          <div class="stbox" id="stbox">
+            <div class="spin"></div>
+            <div class="sttxt" id="scanStatus">Connecting…</div>
+            <div class="stsub" id="scanSub">Checking DexScreener access</div>
+          </div>
+          <table id="mtable" style="display:none">
+            <thead id="thead"><tr id="theadRow"></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DETAIL PANEL -->
+      <div class="detail">
+        <div class="detail-head">
+          <div class="detail-title" id="detTitle">Setup Details</div>
+        </div>
+        <div class="dbody">
+          <div class="dempty" id="dempty"><span class="dempty-ico">◈</span>Click any row<br>to view details</div>
+          <div id="dcontent" style="display:none"></div>
+        </div>
+      </div>
+    </div><!-- end body-split -->
+
+    <!-- COMBINED SMC SIGNALS VIEW -->
+    <div class="choch-view" id="signalsView" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+
+      <!-- TOP TOOLBAR -->
+      <div style="flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:9px 14px;gap:8px;flex-wrap:wrap">
+        <div style="font-size:12px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:7px">
+          🎯 SMC Signals
+          <span style="font-size:10px;font-weight:400;color:var(--txt3)">— Bearish CHoCH + Launch Sweep · Max 5 days · 5M TF</span>
+        </div>
+        <!-- Source filter -->
+        <div style="display:flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:2px;gap:2px">
+          <button class="fs-btn fs-on-all" id="sig-src-all"   onclick="setSigSrc('all')">All</button>
+          <button class="fs-btn"           id="sig-src-choch" onclick="setSigSrc('choch')">📉 CHoCH</button>
+          <button class="fs-btn"           id="sig-src-sweep" onclick="setSigSrc('sweep')">🕯 Sweep</button>
+        </div>
+        <!-- Status filter -->
+        <div style="display:flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;padding:2px;gap:2px">
+          <button class="fs-btn fs-on-all" id="sig-st-all"      onclick="setSigStatus('all')">All Status</button>
+          <button class="fs-btn"           id="sig-st-confirmed" onclick="setSigStatus('confirmed')">🔴 Confirmed</button>
+          <button class="fs-btn"           id="sig-st-forming"   onclick="setSigStatus('forming')">🟡 Forming</button>
+          <button class="fs-btn"           id="sig-st-bounce"    onclick="setSigStatus('bounce')">🟢 Bouncing</button>
+        </div>
+        <div class="flt"><label>Max Age</label>
+          <select id="sigMaxAge" onchange="renderSignalsTable()">
+            <option value="6">6h</option>
+            <option value="24">24h</option>
+            <option value="48">48h</option>
+            <option value="72">3 days</option>
+            <option value="120" selected>5 days</option>
+          </select>
+        </div>
+        <div class="flt"><label>Min Liq</label>
+          <select id="sigMinLiq" onchange="renderSignalsTable()">
+            <option value="0">Any</option>
+            <option value="1000" selected>$1K+</option>
+            <option value="5000">$5K+</option>
+          </select>
+        </div>
+        <span style="margin-left:auto;font-size:11px;color:var(--txt3)" id="sigInfo">—</span>
+      </div>
+
+      <!-- TABLE -->
+      <div style="flex:1;overflow:auto">
+        <table style="width:100%;border-collapse:collapse;min-width:900px">
+          <thead style="position:sticky;top:0;z-index:10">
+            <tr style="background:var(--card);border-bottom:1px solid var(--border)">
+              <th onclick="sortSig('sym')"    style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Token</th>
+              <th style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;border-right:1px solid var(--border)">Type</th>
+              <th style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;border-right:1px solid var(--border)">Status</th>
+              <th style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;border-right:1px solid var(--border)">Visual</th>
+              <th onclick="sortSig('age')"    style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Age ↕</th>
+              <th onclick="sortSig('pump')"   style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Pump% ↕</th>
+              <th onclick="sortSig('m5')"     style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">5m% ↕</th>
+              <th onclick="sortSig('h1')"     style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">1h% ↕</th>
+              <th onclick="sortSig('level')"  style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Key Level ↕</th>
+              <th onclick="sortSig('dist')"   style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Dist% ↕</th>
+              <th onclick="sortSig('liq')"    style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Liq ↕</th>
+              <th onclick="sortSig('score')"  style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;cursor:pointer;border-right:1px solid var(--border)">Score ↕</th>
+              <th style="padding:8px 12px;font-size:10px;font-weight:600;color:var(--txt3);text-align:left;text-transform:uppercase">Chart</th>
+            </tr>
+          </thead>
+          <tbody id="sigTbody">
+            <tr><td colspan="13" style="text-align:center;padding:50px;color:var(--txt3);font-size:12px">
+              <div style="font-size:28px;opacity:.15;margin-bottom:8px">🎯</div>
+              Run a scan to detect SMC signals
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+        <!-- LIVE LAUNCHES STRIP -->
+    <div class="launches">
+      <div class="lh">
+        <div class="lh-title">🚀 New Launches</div>
+        <span class="src-chip sc-pump" id="pumpSt"><span class="lchip-dot"></span>Pump.fun</span>
+        <span class="src-chip sc-dex" id="dexSt"><span class="lchip-dot"></span>DexScreener</span>
+        <div class="lf-seg">
+          <button class="lf-btn on" id="lf-all" onclick="setLF('all')">All</button>
+          <button class="lf-btn" id="lf-pump" onclick="setLF('pump')">🟣 Pump</button>
+          <button class="lf-btn" id="lf-dex" onclick="setLF('dex')">🔵 Dex</button>
+          <button class="lf-btn" id="lf-liq" onclick="setLF('liq')">💧 Liq</button>
+        </div>
+        <div class="lh-right">
+          <span id="launchTotal">0 coins</span>
+          <span id="launchRate">0/min</span>
+        </div>
+      </div>
+      <div class="lscroll" id="lscroll">
+        <div class="lempty"><span style="font-size:20px;opacity:.2">📡</span>Starting feed…</div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+</div><!-- end app -->
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="dbgp" id="dbgp">
+  <div class="dbgh"><span>⚙ DEBUG · <span id="dbgst">idle</span></span><span onclick="document.getElementById('dlog').innerHTML=''" style="cursor:pointer;color:#555">clear</span></div>
+  <div id="dlog"></div>
+</div>
+
+<script>
+'use strict';
+const WORKER_URL='https://long-smoke-c771.singh-parmeet123.workers.dev';
+/* ══ STATE ══════════════════════════════════════════════════════════════════ */
+const TFS=['5m','15m','1h'];
+const state={
+  '5m':{results:[],mode:'all',sortKey:'score',sortDir:-1,prevSet:new Set()},
+  '15m':{results:[],mode:'all',sortKey:'score',sortDir:-1,prevSet:new Set()},
+  '1h':{results:[],mode:'all',sortKey:'score',sortDir:-1,prevSet:new Set()},
+};
+let activeTF='5m';
+let scanning=false, cdVal=30, cdTimer=null, debugOn=false;
+let feedItems=[], feedTotal=0, feedRateCount=0, lfFilter='all';
+let pumpTimer=null, dexTimer=null, lastPumpTs=0, feedRateTimer=null;
+let pairsScanned=0, selAddr=null;
+
+/* ══ UTILS ══════════════════════════════════════════════════════════════════ */
+const fu=n=>{if(!n||isNaN(n))return'—';if(n>=1e9)return'$'+(n/1e9).toFixed(2)+'B';if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return'$'+(n/1e3).toFixed(1)+'K';return'$'+n.toFixed(2);};
+const fp=p=>{if(!p||isNaN(p))return'—';if(p<1e-8)return p.toExponential(2);if(p<0.001)return p.toPrecision(3);if(p<1)return p.toPrecision(4);return p.toFixed(3);};
+const pcc=(v,d=1)=>{if(v===undefined||isNaN(v))return'<span class="neu">—</span>';const c=v>0.05?'up':v<-0.05?'dn':'neu';return`<span class="${c}">${v>=0?'+':''}${v.toFixed(d)}%</span>`;};
+const clamp=(v,a,b)=>Math.min(Math.max(v,a),b);
+
+/* ══ TOAST ══════════════════════════════════════════════════════════════════ */
+function toast(msg,t='',d=3000){const w=document.getElementById('toastWrap'),el=document.createElement('div');el.className='toast'+(t?' t'+t:'');el.textContent=msg;w.appendChild(el);setTimeout(()=>{el.style.cssText='opacity:0;transform:translateY(8px);transition:all .3s';setTimeout(()=>el.remove(),300);},d);}
+
+/* ══ DEBUG ══════════════════════════════════════════════════════════════════ */
+function toggleDebug(){debugOn=!debugOn;document.getElementById('dbgp').className='dbgp'+(debugOn?' show':'');}
+function dbg(msg,t='in'){if(!debugOn)return;const d=document.getElementById('dlog');d.innerHTML=`<div class="${t}">[${new Date().toLocaleTimeString('en',{hour12:false})}] ${msg}</div>`+d.innerHTML;document.getElementById('dbgst').textContent=msg.slice(0,55);}
+
+/* ══ COUNTDOWN ══════════════════════════════════════════════════════════════ */
+function startCD(){clearInterval(cdTimer);cdVal=30;document.getElementById('cd').textContent=30;cdTimer=setInterval(()=>{cdVal--;document.getElementById('cd').textContent=Math.max(cdVal,0);if(cdVal<=0){clearInterval(cdTimer);runScan();}},1000);}
+function manualScan(){clearInterval(cdTimer);runScan();}
+
+/* ══ TF SWITCHING ═══════════════════════════════════════════════════════════ */
+const TF_CONFIG={
+  '5m':{label:'5M',cls:'tfl-5m',desc:'m5 touch candle · h1 structure · all ages',tabCls:'active-5m',col:'var(--c5m)',
+        headers:['Token','Setup','OB','IDM%','Liq','m5%','h1%','B/S','Score']},
+  '15m':{label:'15M',cls:'tfl-15m',desc:'h1 touch candle · h6 structure · all ages',tabCls:'active-15m',col:'var(--c15m)',
+         headers:['Token','Setup','OB','IDM%','Liq','h1%','h6%','B/S','Score']},
+  '1h':{label:'1H',cls:'tfl-1h',desc:'h6 touch candle · h24 structure · all ages',tabCls:'active-1h',col:'var(--c1h)',
+        headers:['Token','Setup','OB','IDM%','Liq','h6%','h24%','B/S','Score']},
+};
+const SORT_KEYS={
+  '5m': ['sym','setup','ob','dist','liq','m5','h1','bs','score'],
+  '15m':['sym','setup','ob','dist','liq','h1','h6','bs','score'],
+  '1h': ['sym','setup','ob','dist','liq','h6','h24','bs','score'],
+};
+
+function switchTF(tf){
+  activeTF=tf;
+  // Show/hide sweep view vs screener
+  const sweepView=document.getElementById('sweepView');
+  const screener=document.getElementById('screener');
+  const signalsView=document.getElementById('signalsView');
+  if(signalsView){signalsView.style.display=tf==='signals'?'flex':'none';}
+  if(chochView){chochView.style.display='none';}
+  if(sweepView){sweepView.style.display='none';}
+  if(screener){screener.style.display=tf==='signals'?'none':'flex';}
+  if(detail){detail.style.display=tf==='signals'?'none':'';}
+  if(tf==='signals'){
+    const tabSignalsEl=document.getElementById('tabSignals');
+    if(tabSignalsEl){tabSignalsEl.style.borderBottomColor='var(--r)';tabSignalsEl.style.color='var(--r)';}
+    const nlSignalsEl=document.getElementById('nlSignals');
+    if(nlSignalsEl)nlSignalsEl.className='nav-link on';
+    renderSignalsTable();return;
+  }
+  // clear signals tab style
+  const tabSignelReset=document.getElementById('tabSignals');
+  if(tabSignelReset){tabSignelReset.style.borderBottomColor='transparent';tabSignelReset.style.color='';}
+  const nlSignalReset=document.getElementById('nlSignals');
+  if(nlSignalReset)nlSignalReset.className='nav-link';
+
+
+  // Update tabs
+  TFS.forEach(t=>{
+    const tab=document.getElementById('tab'+t);
+    if(tab)tab.className='tf-tab'+(t===tf?' '+TF_CONFIG[t].tabCls:'');
+  });
+  const tabSignals=document.getElementById('tabSignals');
+  if(tabSignals){tabSignals.style.borderBottomColor='transparent';tabSignals.style.color='';}
+  const nlSignalsEl=document.getElementById('nlSignals');
+  if(nlSignalsEl)nlSignalsEl.className='nav-link';
+  // Update nav links
+  TFS.forEach(t=>{
+    const nl=document.getElementById('nl'+t);
+    if(nl)nl.className='nav-link'+(t===tf?' on':'');
+  });
+  const nlSweep=document.getElementById('nlSweep');
+  if(nlSweep)nlSweep.className='nav-link';
+  // Update toolbar
+  const cfg=TF_CONFIG[tf];
+  const lbl=document.getElementById('tfLabel');
+  if(lbl){lbl.className='tf-label '+cfg.cls;lbl.textContent=cfg.label;}
+  const desc=document.getElementById('panelDesc');
+  if(desc)desc.textContent=cfg.desc;
+  // Rebuild thead
+  const sortKeys=SORT_KEYS[tf];
+  const theadRow=document.getElementById('theadRow');
+  if(theadRow){
+    theadRow.innerHTML=cfg.headers.map((h,i)=>{
+      const k=sortKeys[i];
+      if(k==='ob')return`<th>${h}</th>`;
+      return`<th onclick="doSort('${k}')" id="th-${k}">${h} <span class="arr">↕</span></th>`;
+    }).join('');
+  }
+  // Re-apply sort highlight
+  const s=state[tf];
+  document.querySelectorAll('th').forEach(t=>t.classList.remove('srt'));
+  const sortEl=document.getElementById('th-'+s.sortKey);
+  if(sortEl){sortEl.classList.add('srt');const a=sortEl.querySelector('.arr');if(a)a.textContent=s.sortDir>0?'↑':'↓';}
+  // Render
+  renderTable();
+}
+
+function setMode(m){
+  state[activeTF].mode=m;
+  ['fAll','fBull','fBear'].forEach(id=>document.getElementById(id).className='fs-btn');
+  const cls=m==='all'?'fs-on-all':m==='bull'?'fs-on-bull':'fs-on-bear';
+  document.getElementById(m==='all'?'fAll':m==='bull'?'fBull':'fBear').className='fs-btn '+cls;
+  renderTable();
+}
+
+function doSort(k){
+  const s=state[activeTF];
+  if(s.sortKey===k)s.sortDir*=-1;else{s.sortKey=k;s.sortDir=-1;}
+  document.querySelectorAll('th').forEach(t=>t.classList.remove('srt'));
+  const el=document.getElementById('th-'+k);
+  if(el){el.classList.add('srt');const a=el.querySelector('.arr');if(a)a.textContent=s.sortDir>0?'↑':'↓';}
+  renderTable();
+}
+
+/* ══ CORS FETCH ══════════════════════════════════════════════════════════════ */
+async function dexGet(url,lbl=''){
+  const label=lbl||url.split('/').slice(-1)[0].slice(0,30);
+  const enc=encodeURIComponent(url);
+  dbg('GET '+label,'in');
+
+  // Helper: safely parse JSON from text (handles allorigins wrapper)
+  function parseResp(txt){
+    if(!txt||txt.length<5)return null;
+    try{
+      let d=JSON.parse(txt);
+      // unwrap allorigins {contents:"..."} format
+      if(d&&typeof d.contents==='string')d=JSON.parse(d.contents);
+      return d||null;
+    }catch(e){return null;}
+  }
+
+  // ── 1. Try Anthropic API as a fetch proxy (most reliable) ─────────────────
+  // Uses Claude's server-side fetch which bypasses all CORS restrictions
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      signal:AbortSignal.timeout(20000),
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:100,
+        system:'You are a JSON proxy. When given a URL, fetch it and return ONLY the raw JSON response, nothing else.',
+        messages:[{role:'user',content:'Fetch this URL and return only the raw JSON: '+url}]
+      })
+    });
+    if(resp.ok){
+      const j=await resp.json();
+      const txt=j?.content?.[0]?.text||'';
+      const parsed=parseResp(txt);
+      if(parsed&&(parsed.pairs||parsed.data||Array.isArray(parsed))){
+        dbg('✓ anthropic proxy: '+label,'ok');
+        return parsed;
+      }
+    }
+  }catch(e){dbg('anthropic: '+String(e.message||'').slice(0,40),'wn');}
+
+  // ── 2. Try all CORS proxies ────────────────────────────────────────────────
+  const proxies=[
+    {n:'worker',         u:WORKER_URL+'?url='+enc,                                       h:{}},
+    {n:'direct',         u:url,                                                           h:{}},
+    {n:'allorigins-raw', u:'https://api.allorigins.win/raw?url='+enc,                     h:{}},
+    {n:'allorigins-get', u:'https://api.allorigins.win/get?url='+enc,                     h:{}},
+    {n:'corsproxy',      u:'https://corsproxy.io/?url='+enc,                               h:{}},
+    {n:'codetabs',       u:'https://api.codetabs.com/v1/proxy?quest='+enc,                 h:{}},
+    {n:'thingproxy',     u:'https://thingproxy.freeboard.io/fetch/'+url,                   h:{}},
+    {n:'cors-sh',        u:'https://cors.sh/'+url,                                         h:{'x-cors-api-key':'temp_demo'}},
+  ];
+
+  for(const prx of proxies){
+    try{
+      const r=await fetch(prx.u,{signal:AbortSignal.timeout(15000),headers:{'Accept':'application/json',...prx.h}});
+      if(!r.ok){dbg(prx.n+': '+r.status,'wn');continue;}
+      const parsed=parseResp(await r.text());
+      if(parsed){dbg('✓ '+prx.n+': '+label,'ok');return parsed;}
+    }catch(e){dbg(prx.n+': '+String(e.message||'').slice(0,40),'wn');}
+  }
+
+  dbg('✗ all proxies failed: '+label+' — open in Chrome or use npx serve .','er');
+  return null;
+}
+
+/* ══ FETCH PAIRS ═════════════════════════════════════════════════════════════ */
+async function fetchAllPairs(){
+  const minLiq=+document.getElementById('minLiq').value;
+  const all=[],seen=new Set();
+  const tryAdd=p=>{
+    if(!p?.pairAddress||seen.has(p.pairAddress)||p.chainId!=='solana')return;
+    if((p.liquidity?.usd||0)<minLiq)return;
+    // NO AGE FILTER — accept all coins regardless of age
+    seen.add(p.pairAddress);all.push(p);
+  };
+  setProg(5,true);
+  const qs=['SOL','pump','meme','raydium','pumpswap','bonk','wif','jupiter','orca','moonshot','doge','pepe','cat','ai','trump','new','solana','jup','drift','base'];
+  const rs=await Promise.allSettled(qs.map(q=>dexGet(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(q)}`,q)));
+  let d=0;rs.forEach(r=>{d++;if(r.status==='fulfilled'&&r.value?.pairs)r.value.pairs.forEach(tryAdd);updSt(`Searching ${d}/${qs.length}…`,`${all.length} pairs`,5+d/qs.length*38);});
+  updSt('Fetching profiles…',`${all.length} pairs`,44);
+  const pd=await dexGet('https://api.dexscreener.com/token-profiles/latest/v1','profiles');
+  const profs=(Array.isArray(pd)?pd:(pd?.data||[])).filter(x=>x.chainId==='solana');
+  for(let i=0;i<Math.min(profs.length,80);i+=10){
+    const res=await Promise.allSettled(profs.slice(i,i+10).map(p=>dexGet(`https://api.dexscreener.com/latest/dex/tokens/${p.tokenAddress}`,'tok')));
+    res.forEach(r=>{if(r.status==='fulfilled')r.value?.pairs?.forEach(tryAdd);});
+    setProg(44+((i+10)/80)*43,true);updSt(`Profiles ${Math.min(i+10,profs.length)}/80`,`${all.length} pairs`,44+((i+10)/80)*43);
+  }
+  pairsScanned=all.length;setProg(90);
+  return all;
+}
+
+/* ══ COMBINED SMC SIGNALS TABLE ══════════════════════════════════════════════
+   Merges Bearish CHoCH + Launch Sweep into one unified view.
+   Both run their own independent detection logic, results shown together.
+═══════════════════════════════════════════════════════════════════════════════ */
+let sigSrc='all', sigStatus='all', sigSortKey='score', sigSortDir=-1;
+
+function setSigSrc(s){
+  sigSrc=s;
+  ['all','choch','sweep'].forEach(k=>{
+    const el=document.getElementById('sig-src-'+k);
+    if(el)el.className='fs-btn'+(k===s?' fs-on-all':'');
+  });
+  renderSignalsTable();
+}
+
+function setSigStatus(s){
+  sigStatus=s;
+  ['all','confirmed','forming','bounce'].forEach(k=>{
+    const el=document.getElementById('sig-st-'+k);
+    if(el)el.className='fs-btn'+(k===s?' fs-on-all':'');
+  });
+  renderSignalsTable();
+}
+
+function sortSig(k){
+  if(sigSortKey===k)sigSortDir*=-1;else{sigSortKey=k;sigSortDir=-1;}
+  renderSignalsTable();
+}
+
+function renderSignalsTable(){
+  // Re-detect from cached pairs with current filter settings
+  const pairs=window._lastPairs||[];
+  if(pairs.length>0){
+    // Update filter inputs from combined selects
+    const maxAgeEl=document.getElementById('sigMaxAge');
+    const minLiqEl=document.getElementById('sigMinLiq');
+    // Temporarily sync choch/sweep filter inputs
+    ['chMaxAge','swMaxAge'].forEach(id=>{const el=document.getElementById(id);if(el&&maxAgeEl)el.value=maxAgeEl.value;});
+    ['chMinLiq','swMinLiq'].forEach(id=>{const el=document.getElementById(id);if(el&&minLiqEl)el.value=minLiqEl.value;});
+
+    chochResults=[];sweepResults=[];
+    for(const p of pairs){
+      const c=detectChoch(p);if(c)chochResults.push({pair:p,choch:c});
+      const s=detectSweep(p); if(s)sweepResults.push({pair:p,sweep:s});
+    }
+  }
+
+  // Build unified rows
+  let rows=[];
+
+  // Add CHoCH rows
+  if(sigSrc==='all'||sigSrc==='choch'){
+    chochResults.forEach(({pair,choch})=>{
+      // Map status to unified key
+      const uStatus = choch.status==='fresh'?'confirmed':'forming';
+      rows.push({
+        pair, type:'choch', typeLabel:'📉 CHoCH',
+        status:uStatus,
+        statusLabel:choch.statusLabel,
+        age:choch.age,
+        pump:choch.priorBullish,
+        m5:choch.m5, h1:choch.h1,
+        level:choch.hlLevel,
+        dist:choch.distToHL,
+        liq:choch.liq, score:choch.score,
+        raw:choch,
+      });
+    });
+  }
+
+  // Add Sweep rows
+  if(sigSrc==='all'||sigSrc==='sweep'){
+    sweepResults.forEach(({pair,sweep})=>{
+      // Map status to unified key
+      const uStatus = sweep.status==='bounce'?'bounce':sweep.status==='swept'?'confirmed':'forming';
+      rows.push({
+        pair, type:'sweep', typeLabel:'🕯 Sweep',
+        status:uStatus,
+        statusLabel:sweep.statusLabel,
+        age:sweep.age,
+        pump:sweep.pumpPct,
+        m5:sweep.m5, h1:sweep.h1,
+        level:sweep.c2Low,
+        dist:sweep.distToC2,
+        liq:sweep.liq, score:sweep.score,
+        raw:sweep,
+      });
+    });
+  }
+
+  // Filter by status
+  if(sigStatus!=='all') rows=rows.filter(r=>r.status===sigStatus);
+
+  // Remove duplicates (same pair addr appearing in both) — keep higher score
+  const seen=new Map();
+  rows.forEach(r=>{
+    const addr=r.pair.pairAddress;
+    if(!seen.has(addr)||r.score>seen.get(addr).score) seen.set(addr,r);
+  });
+  // But if both CHoCH AND sweep fire on same coin, show both (different signals)
+  // So only dedup within same type
+  const seenTyped=new Set();
+  rows=rows.filter(r=>{
+    const key=r.pair.pairAddress+'_'+r.type;
+    if(seenTyped.has(key))return false;
+    seenTyped.add(key);return true;
+  });
+
+  // Sort
+  rows.sort((a,b)=>{
+    let v=0;
+    if(sigSortKey==='sym')   v=(a.pair.baseToken?.symbol||'').localeCompare(b.pair.baseToken?.symbol||'');
+    else if(sigSortKey==='age')   v=a.age-b.age;
+    else if(sigSortKey==='pump')  v=a.pump-b.pump;
+    else if(sigSortKey==='m5')    v=a.m5-b.m5;
+    else if(sigSortKey==='h1')    v=a.h1-b.h1;
+    else if(sigSortKey==='level') v=a.level-b.level;
+    else if(sigSortKey==='dist')  v=a.dist-b.dist;
+    else if(sigSortKey==='liq')   v=a.liq-b.liq;
+    else if(sigSortKey==='score') v=a.score-b.score;
+    return v*sigSortDir;
+  });
+
+  // Update badges
+  const total=rows.length;
+  ['nbSignals','tbcSignals'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=chochResults.length+sweepResults.length;});
+  const info=document.getElementById('sigInfo');
+  if(info)info.textContent=`${total} signals · ${chochResults.length} CHoCH · ${sweepResults.length} Sweeps`;
+
+  const tbody=document.getElementById('sigTbody');
+  if(!tbody)return;
+
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="13" style="text-align:center;padding:50px;color:var(--txt3);font-size:12px">
+      <div style="font-size:28px;opacity:.15;margin-bottom:8px">🎯</div>
+      ${(chochResults.length+sweepResults.length)?'No signals match the current filter':'Run a scan to detect SMC signals'}
+    </td></tr>`;
+    return;
+  }
+
+  const scoreCol=sc=>sc>=70?'var(--g)':sc>=50?'var(--y)':'var(--r)';
+
+  tbody.innerHTML=rows.map(row=>{
+    const{pair,type,typeLabel,status,statusLabel,age,pump,m5,h1,level,dist,liq,score}=row;
+    const base=pair.baseToken||{};
+    const img=pair.info?.imageUrl||'';
+    const sym=(base.symbol||'?').slice(0,2);
+    const dexUrl=pair.url||`https://dexscreener.com/solana/${pair.pairAddress}`;
+
+    // Border + status color
+    const borderCol=status==='bounce'?'var(--g)':status==='confirmed'?'var(--r)':'var(--y)';
+    const statusCls=status==='bounce'?'sp-bounce':status==='confirmed'?'sp-swept':'sp-approach';
+
+    // Type badge
+    const typeBg=type==='choch'?'var(--rbg)':'var(--ybg)';
+    const typeColor=type==='choch'?'var(--r)':'var(--y)';
+    const typeBorder=type==='choch'?'var(--rbr)':'var(--ybr)';
+
+    // Visual — use appropriate viz
+    const vizHtml=type==='choch'?chochViz(row.raw):candleViz(row.raw);
+
+    // Distance display
+    const distDisplay = type==='choch'
+      ? (dist<=0?`<span class="dn">✓ ${Math.abs(dist).toFixed(1)}% below</span>`:`<span class="neu">${dist.toFixed(1)}% away</span>`)
+      : (dist<=0?`<span class="dn">⬇ ${Math.abs(dist).toFixed(1)}%</span>`:`<span class="neu">${dist.toFixed(1)}%</span>`);
+
+    const sc=score;
+    return`<tr
+      style="border-bottom:1px solid var(--border);cursor:pointer;border-left:3px solid ${borderCol}"
+      onmouseover="this.style.background='var(--hover)'"
+      onmouseout="this.style.background=''"
+      ondblclick="window.open('${dexUrl}','_blank')"
+      title="Double-click → DexScreener chart">
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="timg">${img?`<img src="${img}" onerror="this.parentNode.textContent='${sym}'">`:`${sym}`}</div>
+          <div>
+            <div style="font-weight:700;font-size:12px">${base.symbol||'?'}</div>
+            <div style="font-size:10px;color:var(--txt3)">${base.symbol||'?'}/SOL</div>
+          </div>
+        </div>
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <span style="background:${typeBg};color:${typeColor};border:1px solid ${typeBorder};padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700">${typeLabel}</span>
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <span class="status-pill ${statusCls}"><span class="sp-dot"></span>${statusLabel}</span>
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${vizHtml}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${ageChip(age)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);color:var(--g);font-weight:600">+${pump.toFixed(1)}%</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)"><span class="${m5<0?'dn':'up'}">${m5>=0?'+':''}${m5.toFixed(1)}%</span></td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)"><span class="${h1<0?'dn':'up'}">${h1>=0?'+':''}${h1.toFixed(1)}%</span></td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-family:monospace;font-size:11px;color:var(--y)">${fp(level)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${distDisplay}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-size:11px">${fu(liq)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="width:40px;height:3px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${sc}%;background:${scoreCol(sc)};border-radius:3px"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:${scoreCol(sc)}">${sc}</span>
+        </div>
+      </td>
+      <td style="padding:8px 12px">
+        <a href="${dexUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+          style="font-size:10px;padding:2px 7px;border-radius:4px;background:var(--bbg);color:var(--b);border:1px solid var(--bbr);font-weight:600;text-decoration:none">
+          Chart ↗
+        </a>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══ BEARISH CHOCH SCANNER ═══════════════════════════════════════════════════
+
+  SMC BEARISH CHoCH — Change of Character (5M timeframe):
+  ────────────────────────────────────────────────────────────────────────────
+  In a bullish trend price makes Higher Highs (HH) and Higher Lows (HL).
+  A Bearish CHoCH occurs when the FIRST Higher Low (HL) is broken on a
+  CLOSED 5M candle — signalling the trend character has changed to bearish.
+
+  DETECTION using DexScreener % change fields:
+  ────────────────────────────────────────────────────────────────────────────
+  Available: price, m5%, h1%, h6%, h24%, pairCreatedAt
+
+  Step 1 — Confirm bullish structure existed:
+    · h6 > 10% OR h24 > 20%  →  HH+HL sequence was forming (green candles)
+    · h1 > 0%                →  The last 1H candle was still bullish (HL held)
+
+  Step 2 — CHoCH on 5M close:
+    · m5 is NEGATIVE and meaningful (< -2%)
+    · The 5M close breaks below the estimated Higher Low
+
+  Step 3 — Estimate the Higher Low level (HL):
+    · HL ≈ price_1h_ago × 0.97  (3% below the prior hourly close)
+    · This represents the last consolidation low before the HH pushed higher
+    · "Closed below HL" = current price < HL estimate
+
+  STATUSES:
+  ────────────────────────────────────────────────────────────────────────────
+  🔴 CHoCH Confirmed — m5 close is already BELOW the estimated HL
+                        → Structure already changed, trend reversed
+  🟡 Forming          — m5 is negative and approaching HL (within 2%)
+                        → CHoCH is forming, not yet confirmed
+
+  SCORE:
+  ────────────────────────────────────────────────────────────────────────────
+  Higher score for:
+  · Stronger prior bullish structure (bigger h6/h24)
+  · Deeper 5M break below HL (more conviction)
+  · Sell pressure > Buy pressure
+  · Coin is newer (fresher momentum)
+  ────────────────────────────────────────────────────────────────────────────
+*/
+let chochResults=[], chochSortKey='score', chochSortDir=-1, chochFilter='all';
+
+function detectChoch(pair){
+  const price = parseFloat(pair.priceUsd || 0);
+  if(!price || price <= 0) return null;
+
+  const m5  = pair.priceChange?.m5  || 0;
+  const h1  = pair.priceChange?.h1  || 0;
+  const h6  = pair.priceChange?.h6  || 0;
+  const h24 = pair.priceChange?.h24 || 0;
+  const liq = pair.liquidity?.usd   || 0;
+  const vol = pair.volume?.h24      || 0;
+  const age = Date.now() - (pair.pairCreatedAt || Date.now());
+
+  // ── HARD AGE CAP: max 5 days ─────────────────────────────────────────────
+  const chMaxAge = +document.getElementById('chMaxAge').value;
+  const chMinLiq = +document.getElementById('chMinLiq').value;
+  const maxAge   = Math.min(chMaxAge > 0 ? chMaxAge : 120, 120); // hard cap 5 days
+  if(age > maxAge * 3600000) return null;
+  if(liq < chMinLiq) return null;
+
+  // ── STEP 1: Bullish structure must have existed ───────────────────────────
+  // Prior uptrend: h6 significantly positive OR h24 significantly positive
+  const priorBullish = h6 > 10 || h24 > 20;
+  if(!priorBullish) return null;
+
+  // The prior 1H candle should have been positive (HL was holding)
+  // We allow slight negative h1 (up to -3%) as the CHoCH might have started
+  if(h1 < -20) return null; // too much — structure collapsed, not a CHoCH
+
+  // ── STEP 2: 5M CHoCH close ───────────────────────────────────────────────
+  // m5 must be negative (5M closed red, breaking the HL)
+  if(m5 >= -1) return null; // need meaningful 5M close below
+
+  // ── STEP 3: Reconstruct price levels ─────────────────────────────────────
+  // price_1h = price when the 1H candle opened (1h ago)
+  const p1h  = price / (1 + h1  / 100);  // 1h ago
+  const p6h  = price / (1 + h6  / 100);  // 6h ago (pump base)
+  const p24h = price / (1 + h24 / 100);  // 24h ago
+
+  // Estimate the HH that formed during the bullish run
+  const prevHH = Math.max(p1h, p6h) * (1 + Math.abs(h6) * 0.15 / 100);
+
+  // Estimate the Higher Low (HL) — the last consolidation before HH
+  // HL sits between the pump base and the HH, typically 20-40% into the range
+  const pumpRange = prevHH - Math.min(p6h, p24h);
+  const hlLevel   = Math.min(p6h, p24h) + pumpRange * 0.35; // ~35% up from base
+  // Alternative: simple estimate = 97% of p1h (slight below prior close)
+  const hlEstimate = Math.max(hlLevel, p1h * 0.97);
+
+  // ── STATUS: has 5M candle CLOSED below HL? ───────────────────────────────
+  const distToHL = (price - hlEstimate) / hlEstimate * 100; // negative = below HL
+  const breakPct = Math.abs(Math.min(distToHL, 0)); // how far below HL
+
+  let status, statusLabel;
+  if(distToHL <= 0){
+    // Price already closed BELOW HL → CHoCH CONFIRMED
+    status = 'fresh'; statusLabel = '🔴 CHoCH Confirmed';
+  } else if(distToHL <= 2){
+    // Price within 2% of HL → Forming
+    status = 'forming'; statusLabel = '🟡 Forming';
+  } else {
+    return null; // too far above HL, not relevant yet
+  }
+
+  // ── B/S PRESSURE ─────────────────────────────────────────────────────────
+  const buys  = pair.txns?.m5?.buys  || pair.txns?.h1?.buys  || 0;
+  const sells = pair.txns?.m5?.sells || pair.txns?.h1?.sells || 0;
+  const bs    = buys > 0 ? sells / buys : (sells > 0 ? 3 : 1); // bear: sells/buys
+
+  // ── SCORE ─────────────────────────────────────────────────────────────────
+  let score = 35;
+  if(status === 'fresh')   score += 25; // confirmed CHoCH = big bonus
+  else                     score += 8;  // forming
+  score += Math.min((Math.abs(h6) + Math.abs(h24)) / 10, 15); // strong prior move
+  score += Math.min(Math.abs(m5) * 1.5, 12);  // stronger 5M close = more conviction
+  score += Math.min(breakPct * 3, 10);          // deeper break below HL
+  score += Math.min((bs - 1) * 6, 10);          // sell pressure
+  if(age < 3600000 * 6)  score += 5;  // very new coin bonus
+  if(age < 3600000 * 24) score += 3;  // new coin bonus
+  score = Math.round(clamp(score, 0, 100));
+
+  return {
+    status, statusLabel,
+    price, m5, h1, h6, h24,
+    priorBullish: Math.max(h6, h24),
+    prevHH, hlLevel: hlEstimate, distToHL, breakPct,
+    buys, sells, bs, liq, vol, age, score,
+  };
+}
+
+/* ── CHOCH STRUCTURE VISUALISER ─────────────────────────────────────────────
+   Shows the HH+HL structure and the break below
+*/
+function chochViz(c){
+  const upH   = Math.min(Math.max(c.priorBullish, 10), 80) * 0.3;
+  const hlH   = upH * 0.5;
+  const breakH= Math.min(Math.abs(c.m5) * 2, 20);
+  return`<div class="choch-struct" title="CHoCH structure visualization">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <div class="cs-bar" style="height:${hlH}px;background:var(--g);opacity:.5;width:6px;border-radius:1px 1px 0 0;position:relative">
+        <div class="cs-wick" style="top:-3px;height:4px;background:var(--g)"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <div class="cs-bar" style="height:${upH}px;background:var(--g);width:6px;border-radius:1px 1px 0 0;position:relative">
+        <div class="cs-wick" style="top:-5px;height:6px;background:var(--g)"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <div class="cs-bar" style="height:${hlH * 0.7}px;background:var(--g);opacity:.7;width:6px;border-radius:1px 1px 0 0"></div>
+    </div>
+    <div style="font-size:10px;color:var(--txt3);align-self:flex-end;padding-bottom:2px;margin:0 1px">—</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <div class="cs-bar" style="height:${breakH}px;background:var(--r);width:6px;border-radius:1px 1px 0 0;position:relative">
+        <div class="cs-wick" style="top:-3px;height:4px;background:var(--r)"></div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:var(--r);font-weight:700;align-self:flex-start;padding-top:2px">↓CHoCH</div>
+  </div>`;
+}
+
+/* ── CHOCH PILL ──────────────────────────────────────────────────────────────*/
+function chochPill(status, label){
+  const cls = status==='fresh'?'choch-fresh':'choch-forming';
+  return`<span class="choch-pill ${cls}"><span class="choch-dot"></span>${label}</span>`;
+}
+
+/* ── SORT ────────────────────────────────────────────────────────────────────*/
+function sortChoch(k){
+  if(chochSortKey===k)chochSortDir*=-1;else{chochSortKey=k;chochSortDir=-1;}
+  renderChochTable();
+}
+
+/* ── FILTER ──────────────────────────────────────────────────────────────────*/
+function setChochFilter(f){
+  chochFilter=f;
+  ['all','fresh','forming'].forEach(k=>{
+    const el=document.getElementById('chf-'+k);
+    if(!el)return;
+    el.className='choch-btn'+(
+      k===f ? (k==='all'?' chon-all':k==='fresh'?' chon-fresh':' chon-forming') : ''
+    );
+  });
+  renderChochTable();
+}
+
+/* ── RENDER CHOCH TABLE ──────────────────────────────────────────────────────*/
+function renderChochTable(){
+  const pairs=window._lastPairs||[];
+  if(pairs.length>0){
+    chochResults=[];
+    for(const p of pairs){
+      const c=detectChoch(p);
+      if(c)chochResults.push({pair:p,choch:c});
+    }
+  }
+
+  let fil=[...chochResults];
+  if(chochFilter!=='all') fil=fil.filter(r=>r.choch.status===chochFilter);
+
+  // Sort
+  fil.sort((a,b)=>{
+    let v=0;
+    if(chochSortKey==='sym')      v=(a.pair.baseToken?.symbol||'').localeCompare(b.pair.baseToken?.symbol||'');
+    else if(chochSortKey==='age')      v=a.choch.age-b.choch.age;
+    else if(chochSortKey==='hlBreak')  v=a.choch.distToHL-b.choch.distToHL;
+    else if(chochSortKey==='m5')       v=a.choch.m5-b.choch.m5;
+    else if(chochSortKey==='h1')       v=a.choch.h1-b.choch.h1;
+    else if(chochSortKey==='prevHH')   v=a.choch.prevHH-b.choch.prevHH;
+    else if(chochSortKey==='hlLevel')  v=a.choch.hlLevel-b.choch.hlLevel;
+    else if(chochSortKey==='breakPct') v=a.choch.breakPct-b.choch.breakPct;
+    else if(chochSortKey==='liq')      v=a.choch.liq-b.choch.liq;
+    else if(chochSortKey==='vol')      v=a.choch.vol-b.choch.vol;
+    else if(chochSortKey==='score')    v=a.choch.score-b.choch.score;
+    return v*chochSortDir;
+  });
+
+  // Update badges
+  const total=chochResults.length;
+  ['nbChoch','tbcChoch'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=total;});
+  const info=document.getElementById('chochInfo');
+  if(info)info.textContent=`${fil.length} of ${total} setups`;
+
+  const tbody=document.getElementById('chochTbody');
+  if(!tbody)return;
+
+  if(!fil.length){
+    tbody.innerHTML=`<tr><td colspan="14" style="text-align:center;padding:50px;color:var(--txt3);font-size:12px">
+      <div style="font-size:28px;opacity:.15;margin-bottom:8px">📉</div>
+      ${chochResults.length?'No setups match the current filter':'Run a scan to detect Bearish CHoCH setups'}
+    </td></tr>`;
+    return;
+  }
+
+  const scoreCol=sc=>sc>=70?'var(--g)':sc>=50?'var(--y)':'var(--r)';
+
+  tbody.innerHTML=fil.map((item,i)=>{
+    const{pair,choch}=item;
+    const base=pair.baseToken||{};
+    const img=pair.info?.imageUrl||'';
+    const sym=(base.symbol||'?').slice(0,2);
+    const dexUrl=pair.url||`https://dexscreener.com/solana/${pair.pairAddress}`;
+    const borderCol=choch.status==='fresh'?'var(--r)':'var(--y)';
+    const sc=choch.score;
+
+    return`<tr
+      style="border-bottom:1px solid var(--border);cursor:pointer;border-left:3px solid ${borderCol}"
+      onmouseover="this.style.background='var(--hover)'"
+      onmouseout="this.style.background=''"
+      ondblclick="window.open('${dexUrl}','_blank')"
+      title="Double-click → DexScreener chart">
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="timg">${img?`<img src="${img}" onerror="this.parentNode.textContent='${sym}'">`:`${sym}`}</div>
+          <div>
+            <div style="font-weight:700;font-size:12px">${base.symbol||'?'}</div>
+            <div style="font-size:10px;color:var(--txt3)">${base.symbol||'?'}/SOL</div>
+          </div>
+        </div>
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${chochPill(choch.status, choch.statusLabel)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${chochViz(choch)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${ageChip(choch.age)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);color:${choch.distToHL<=0?'var(--r)':'var(--y)'};font-weight:700">
+        ${choch.distToHL<=0?'✓ Broke':'~'+choch.distToHL.toFixed(1)+'% away'}
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)"><span class="${choch.m5<0?'dn':'up'}">${choch.m5>=0?'+':''}${choch.m5.toFixed(1)}%</span></td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)"><span class="${choch.h1<0?'dn':'up'}">${choch.h1>=0?'+':''}${choch.h1.toFixed(1)}%</span></td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-family:monospace;font-size:11px">${fp(choch.prevHH)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-family:monospace;font-size:11px;color:var(--y)">${fp(choch.hlLevel)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);color:${choch.status==='fresh'?'var(--r)':'var(--y)'};font-weight:700">
+        ${choch.status==='fresh'?choch.breakPct.toFixed(2)+'% below':'—'}
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-size:11px">${fu(choch.liq)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-size:11px">${fu(choch.vol)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="width:40px;height:3px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${sc}%;background:${scoreCol(sc)};border-radius:3px"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:${scoreCol(sc)}">${sc}</span>
+        </div>
+      </td>
+      <td style="padding:8px 12px">
+        <a href="${dexUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+          style="font-size:10px;padding:2px 7px;border-radius:4px;background:var(--bbg);color:var(--b);border:1px solid var(--bbr);font-weight:600;text-decoration:none">
+          Chart ↗
+        </a>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══ LAUNCH SWEEP SCANNER ════════════════════════════════════════════════════
+
+  CONCEPT:
+  When a new coin launches it typically makes 2–3 green hourly candles (the
+  initial pump). After that the price often pulls back and "sweeps" the low
+  of the 2nd or 3rd green candle — this is where smart money enters.
+
+  APPROXIMATION (no candle API — using % change fields):
+  ─────────────────────────────────────────────────────────────────────────
+  DexScreener gives us: price, m5%, h1%, h6%, h24%
+
+  From these we reconstruct approximate hourly candle levels:
+    c_now  = current price (latest close)
+    c_1h   = price 1h ago  = price / (1 + h1/100)     ← approx candle 2 close
+    c_6h   = price 6h ago  = price / (1 + h6/100)     ← approx pump origin
+    c_24h  = price 24h ago = price / (1 + h24/100)    ← launch base
+
+  The "2nd green candle LOW" is estimated as:
+    → If candle 2 was green (h6 positive, h1 less positive or negative)
+    → C2_low ≈ min(c_1h, c_now) when h1 is red
+    → We use: c2Low = c_1h * (1 - |h1|/200)  ← midpoint of the pullback
+
+  DETECTION CONDITIONS:
+  ─────────────────────────────────────────────────────────────────────────
+  BULL SWEEP SETUP:
+  1. Initial pump exists: h6 > 15% OR h24 > 25%  (green candles 1+2+3 formed)
+  2. Current pullback: h1 < -3%  (hourly candle turning red / sweeping lows)
+  3. Sweep not too deep: h1 > -45%  (not a total dump)
+  4. m5 recovering or near low: m5 > -8%  (not accelerating down hard)
+  5. Candle 2 low estimate: c2Low = price_1h_ago * (1 + h1/200)
+  6. Price is at or below c2Low (within 3% = approaching, already below = swept)
+
+  STATUS:
+  ─────────────────────────────────────────────────────────────────────────
+  BOUNCING   : h1 < -5% AND m5 > 1%   → Swept the low AND m5 is recovering
+  SWEPT      : h1 < -8%               → Candle low already taken out
+  APPROACHING: h1 between -3% and -8% → Getting close to the candle low
+  ─────────────────────────────────────────────────────────────────────────
+*/
+let sweepResults=[], sweepSortKey='score', sweepSortDir=-1, sweepFilter='all';
+
+function detectSweep(pair){
+  const price=parseFloat(pair.priceUsd||0);
+  if(!price||price<=0)return null;
+
+  const m5  = pair.priceChange?.m5  || 0;
+  const h1  = pair.priceChange?.h1  || 0;
+  const h6  = pair.priceChange?.h6  || 0;
+  const h24 = pair.priceChange?.h24 || 0;
+  const liq = pair.liquidity?.usd   || 0;
+  const age = Date.now() - (pair.pairCreatedAt || Date.now());
+
+  // Apply user filters
+  const swMaxAge = +document.getElementById('swMaxAge').value;
+  const swMinLiq = +document.getElementById('swMinLiq').value;
+  const maxAllowedAge = Math.min(swMaxAge > 0 ? swMaxAge : 120, 120); // hard cap 5 days
+  if(age > maxAllowedAge * 3600000) return null;
+  if(liq < swMinLiq) return null;
+
+  // Reconstruct approximate price levels
+  const p1h  = price / (1 + h1  / 100);  // price 1h ago
+  const p6h  = price / (1 + h6  / 100);  // price 6h ago (pre-pump)
+  const p24h = price / (1 + h24 / 100);  // price 24h ago
+
+  // Detect initial pump (green candles 1, 2, 3 must have existed)
+  // The pump is measured from the lowest of p24h/p6h to the high
+  const pumpBase = Math.min(p24h, p6h);
+  const pumpHigh = Math.max(p1h, price, p6h);
+  const pumpPct  = (pumpHigh - pumpBase) / pumpBase * 100;
+
+  // Need a meaningful pump to have formed candles
+  if(pumpPct < 15) return null;
+
+  // Current must be a pullback (hourly red) — sweeping the candle lows
+  if(h1 >= -3)  return null;   // not pulling back enough
+  if(h1 <= -50) return null;   // too deep — just a dump
+
+  // m5 must not be accelerating heavily downward
+  if(m5 < -10) return null;
+
+  // Estimate 2nd green candle LOW
+  // When price was at p1h (1h ago), the candle wick went slightly below open
+  // We estimate c2Low as the midpoint of the current sweep range
+  const c2Low  = p1h * (1 + (h1 * 0.5) / 100);  // ~halfway into the h1 move
+  const c3Low  = p1h * (1 + (h1 * 0.75) / 100); // deeper into the sweep
+
+  // Distance from current price to c2Low (positive = price is above c2Low)
+  const distToC2 = (price - c2Low) / c2Low * 100;
+  const distToC3 = (price - c3Low) / c3Low * 100;
+
+  // Price must be near or below c2Low/c3Low
+  if(distToC2 > 5) return null; // too far above — sweep hasn't started
+
+  // Determine status
+  let status, statusLabel;
+  if(h1 < -8 && m5 > 1){
+    status='bounce'; statusLabel='🟢 Bouncing';  // swept + recovering
+  } else if(h1 < -8){
+    status='swept';  statusLabel='🔴 Swept';     // low taken out
+  } else {
+    status='approach'; statusLabel='🟡 Approaching'; // getting close
+  }
+
+  // Buys vs sells
+  const buys  = pair.txns?.m5?.buys  || pair.txns?.h1?.buys  || 0;
+  const sells = pair.txns?.m5?.sells || pair.txns?.h1?.sells || 0;
+  const bs    = sells > 0 ? buys/sells : (buys > 0 ? 2 : 1);
+
+  // Score: bouncing > swept > approaching; bigger pump better; BS ratio matters
+  let score = 30;
+  if(status==='bounce')  score += 30;
+  else if(status==='swept') score += 15;
+  else score += 5;
+  score += Math.min(pumpPct / 5, 20);       // bigger pump = better setup
+  score += Math.min((bs - 1) * 10, 15);     // buy pressure
+  score += Math.min(Math.abs(h1) * 0.5, 10); // deeper sweep = more liquidity taken
+  if(m5 > 0 && status !== 'bounce') score += 5; // m5 positive bonus
+  score = Math.round(clamp(score, 0, 100));
+
+  return {
+    status, statusLabel,
+    price, m5, h1, h6, h24,
+    pumpPct, pumpBase, pumpHigh,
+    c2Low, c3Low, distToC2, distToC3,
+    buys, sells, bs, liq,
+    age, score,
+  };
+}
+
+/* ── CANDLE VISUALISER (3 bars) ─────────────────────────────────────────────
+   Bar heights scaled from pump% and sweep%
+   Green bars = candle 1, 2, 3 going up
+   Red arrow  = current sweep down
+*/
+function candleViz(setup){
+  const pump = Math.min(setup.pumpPct, 100);
+  const sweep = Math.min(Math.abs(setup.h1), 40);
+  const h1 = Math.round(pump * 0.5);
+  const h2 = Math.round(pump * 0.8);
+  const h3 = Math.round(pump * 1.0);
+  const curH = Math.max(6, Math.round(h3 * (1 - sweep/100)));
+  const scale = 0.26; // scale to 28px max
+  return`<div class="candle-viz" title="Candle low sweep visualization">
+    <div class="cv-bar" style="height:${h1*scale}px;background:var(--g);opacity:.5" title="Candle 1"><div class="cv-wick" style="top:-3px;height:4px;color:var(--g)"></div></div>
+    <div class="cv-bar" style="height:${h2*scale}px;background:var(--g);opacity:.75" title="Candle 2"><div class="cv-wick" style="top:-4px;height:5px;color:var(--g)"></div></div>
+    <div class="cv-bar" style="height:${h3*scale}px;background:var(--g)" title="Candle 3 (high)"><div class="cv-wick" style="top:-4px;height:5px;color:var(--g)"></div></div>
+    <div style="font-size:9px;color:var(--r);font-weight:700;align-self:flex-end;padding-bottom:${Math.max(0,curH*scale-8)}px">↓</div>
+    <div class="cv-bar" style="height:${curH*scale}px;background:var(--r);opacity:.85" title="Current (sweeping)"></div>
+  </div>`;
+}
+
+/* ── SWEEP STATUS PILL ───────────────────────────────────────────────────────*/
+function sweepPill(status, label){
+  const cls = status==='bounce'?'sp-bounce':status==='swept'?'sp-swept':'sp-approach';
+  return`<span class="status-pill ${cls}"><span class="sp-dot"></span>${label}</span>`;
+}
+
+/* ── AGE CHIP ────────────────────────────────────────────────────────────────*/
+function ageChip(ageMs){
+  const h = ageMs/3600000;
+  const str = h < 1 ? Math.floor(ageMs/60000)+'m' : h < 24 ? h.toFixed(1)+'h' : Math.floor(h/24)+'d';
+  const cls = h < 3 ? 'ac-new' : h < 12 ? 'ac-recent' : 'ac-old';
+  return`<span class="age-chip ${cls}">${str}</span>`;
+}
+
+/* ── SORT SWEEP ──────────────────────────────────────────────────────────────*/
+function sortSweep(k){
+  if(sweepSortKey===k)sweepSortDir*=-1;else{sweepSortKey=k;sweepSortDir=-1;}
+  renderSweepTable();
+}
+
+/* ── FILTER ──────────────────────────────────────────────────────────────────*/
+function setSweepFilter(f){
+  sweepFilter=f;
+  ['all','swept','bounce','approach'].forEach(k=>{
+    const el=document.getElementById('swf-'+k);
+    if(!el)return;
+    el.className='sw-btn'+(k===f?k==='all'?' sw-on':k==='swept'?' sw-on-swept':k==='bounce'?' sw-on-bounce':' sw-on':'');
+  });
+  renderSweepTable();
+}
+
+/* ── RENDER SWEEP TABLE ──────────────────────────────────────────────────────*/
+function renderSweepTable(){
+  // Re-run detection with current filters when rendering
+  const pairs=window._lastPairs||[];
+  if(pairs.length>0){
+    sweepResults=[];
+    for(const p of pairs){
+      const s=detectSweep(p);
+      if(s)sweepResults.push({pair:p,sweep:s});
+    }
+  }
+
+  let fil=[...sweepResults];
+  if(sweepFilter!=='all')fil=fil.filter(r=>r.sweep.status===sweepFilter);
+
+  // Sort
+  fil.sort((a,b)=>{
+    let v=0;
+    if(sweepSortKey==='sym')   v=(a.pair.baseToken?.symbol||'').localeCompare(b.pair.baseToken?.symbol||'');
+    else if(sweepSortKey==='age')   v=a.sweep.age-b.sweep.age;
+    else if(sweepSortKey==='pump')  v=a.sweep.pumpPct-b.sweep.pumpPct;
+    else if(sweepSortKey==='sweep') v=a.sweep.h1-b.sweep.h1;
+    else if(sweepSortKey==='m5')    v=a.sweep.m5-b.sweep.m5;
+    else if(sweepSortKey==='c2low') v=a.sweep.c2Low-b.sweep.c2Low;
+    else if(sweepSortKey==='dist')  v=a.sweep.distToC2-b.sweep.distToC2;
+    else if(sweepSortKey==='liq')   v=a.sweep.liq-b.sweep.liq;
+    else if(sweepSortKey==='score') v=a.sweep.score-b.sweep.score;
+    return v*sweepSortDir;
+  });
+
+  // Update badge counts
+  const total=sweepResults.length;
+  document.getElementById('nbSweep').textContent=total;
+  document.getElementById('tbcSweep').textContent=total;
+  document.getElementById('sweepInfo').textContent=`${fil.length} of ${total} setups`;
+
+  const tbody=document.getElementById('sweepTbody');
+  if(!tbody)return;
+
+  if(!fil.length){
+    tbody.innerHTML=`<tr><td colspan="12" style="text-align:center;padding:50px;color:var(--txt3);font-size:12px">
+      <div style="font-size:28px;opacity:.15;margin-bottom:8px">🕯</div>
+      ${sweepResults.length?'No setups match the current filter':'Scan to find candle low sweeps on new coins'}
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML=fil.map((item,i)=>{
+    const{pair,sweep}=item;
+    const base=pair.baseToken||{};
+    const img=pair.info?.imageUrl||'';
+    const sym=(base.symbol||'?').slice(0,2);
+    const dexUrl=pair.url||`https://dexscreener.com/solana/${pair.pairAddress}`;
+    const col=sweep.status==='bounce'?'var(--g)':sweep.status==='swept'?'var(--r)':'var(--y)';
+    const scoreCol=sweep.score>=70?'var(--g)':sweep.score>=50?'var(--y)':'var(--r)';
+
+    return`<tr
+      style="border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-left:3px solid ${col}"
+      onmouseover="this.style.background='var(--hover)'" onmouseout="this.style.background=''"
+      ondblclick="window.open('${dexUrl}','_blank')"
+      title="Double-click → DexScreener chart">
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:9px">
+          <div class="timg">${img?`<img src="${img}" onerror="this.parentNode.textContent='${sym}'">`:`${sym}`}</div>
+          <div>
+            <div style="font-weight:700;font-size:12px">${base.symbol||'?'}</div>
+            <div style="font-size:10px;color:var(--txt3)">${base.symbol||'?'}/SOL</div>
+          </div>
+        </div>
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${sweepPill(sweep.status, sweep.statusLabel)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${candleViz(sweep)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${ageChip(sweep.age)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);color:var(--g);font-weight:600">+${sweep.pumpPct.toFixed(1)}%</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);color:var(--r);font-weight:600">${sweep.h1.toFixed(1)}%</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${pcc(sweep.m5)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);font-family:monospace;font-size:11px">${fp(sweep.c2Low)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border);color:${sweep.distToC2<=0?'var(--r)':sweep.distToC2<2?'var(--y)':'var(--txt2)'};font-weight:600">
+        ${sweep.distToC2<=0?'⬇ '+Math.abs(sweep.distToC2).toFixed(1)+'%':sweep.distToC2.toFixed(1)+'%'}
+      </td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">${fu(sweep.liq)}</td>
+      <td style="padding:8px 12px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="width:40px;height:3px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${sweep.score}%;background:${scoreCol};border-radius:3px"></div></div>
+          <span style="font-size:11px;font-weight:700;color:${scoreCol}">${sweep.score}</span>
+        </div>
+      </td>
+      <td style="padding:8px 12px">
+        <a href="${dexUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+          style="font-size:10px;padding:2px 7px;border-radius:4px;background:var(--bbg);color:var(--b);border:1px solid var(--bbr);font-weight:600">
+          Chart ↗
+        </a>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══ IDM OB DETECTION — 3 TIMEFRAMES ════════════════════════════════════════
+  5M  → Touch: m5%  | Prior: h1%  | Structure: h1 range
+  15M → Touch: h1%  | Prior: h6%  | Structure: h6 range
+  1H  → Touch: h6%  | Prior: h24% | Structure: h24 range
+
+  BULL: touch>0, prior<0, price in OB zone, IDM intact, buys>sells
+  BEAR: touch<0, prior>0, price in OB zone, IDM intact, sells>buys
+═══════════════════════════════════════════════════════════════════════════════ */
+function detectOB(pair, tf){
+  const price=parseFloat(pair.priceUsd||0);
+  if(!price||price<=0)return null;
+  const m5=pair.priceChange?.m5||0, h1=pair.priceChange?.h1||0;
+  const h6=pair.priceChange?.h6||0, h24=pair.priceChange?.h24||0;
+
+  let touch, prior, sA, sB;
+  if(tf==='5m'){touch=m5;prior=h1;sA=h1;sB=h6;}
+  else if(tf==='15m'){touch=h1;prior=h6;sA=h6;sB=h24;}
+  else{touch=h6;prior=h24;sA=h24;sB=h24;}
+
+  const pA=price/(1+sA/100), pB=price/(1+sB/100);
+  const swH=Math.max(price,pA,pB), swL=Math.min(price,pA,pB);
+  if(swH<=swL)return null;
+  const range=swH-swL;
+  if(range/price*100<+document.getElementById('minSwing').value)return null;
+
+  const buys=pair.txns?.m5?.buys||pair.txns?.h1?.buys||0;
+  const sells=pair.txns?.m5?.sells||pair.txns?.h1?.sells||0;
+  const bullBS=sells>0?buys/sells:(buys>0?2:1);
+  const bearBS=buys>0?sells/buys:(sells>0?2:1);
+  const OB=0.20;
+
+  // BULL
+  const bIDM=swL, bOBt=bIDM+range*OB, bOBb=bIDM-range*0.04;
+  if(price>=bOBb&&price<=bOBt*1.06&&price>=bIDM*0.980&&touch>0&&prior<0){
+    const s={tf,type:'bull',idm:bIDM,obT:bOBt,obB:bOBb,price,swH,swL,range,m5,h1,h6,h24,touch,prior,buys,sells,bs:bullBS,dist:Math.abs(price-bIDM)/bIDM*100};
+    s.hasSweep=prior<-5&&touch>0;
+    s.volSpike=(pair.volume?.m5||0)/(Math.max(pair.volume?.h1||1,1)/12)>3;
+    s.score=getScore(s);return s;
+  }
+
+  // BEAR
+  const rIDM=swH, rOBb=rIDM-range*OB, rOBt=rIDM+range*0.04;
+  if(price>=rOBb*0.94&&price<=rOBt&&price<=rIDM*1.020&&touch<0&&prior>0){
+    const s={tf,type:'bear',idm:rIDM,obT:rOBt,obB:rOBb,price,swH,swL,range,m5,h1,h6,h24,touch,prior,buys,sells,bs:bearBS,dist:Math.abs(price-rIDM)/rIDM*100};
+    s.hasSweep=prior>5&&touch<0;
+    s.volSpike=(pair.volume?.m5||0)/(Math.max(pair.volume?.h1||1,1)/12)>3;
+    s.score=getScore(s);return s;
+  }
+  return null;
+}
+
+function getScore(s){
+  let sc=40;
+  sc+=Math.max(0,14-s.dist*1.8);
+  sc+=Math.min((s.bs-1)*12,18);
+  sc+=Math.min(s.range/s.price*100,12);
+  sc+=Math.min(Math.abs(s.prior)*.6,8);
+  if(s.hasSweep)sc+=12;
+  if(s.volSpike)sc+=6;
+  return Math.round(clamp(sc,0,100));
+}
+
+/* ══ PROGRESS / STATUS ═══════════════════════════════════════════════════════ */
+function setProg(p,sc=false){document.getElementById('pf').style.width=clamp(p,0,100)+'%';document.getElementById('ps').style.display=sc?'block':'none';}
+function updSt(main,sub,p){
+  const sm=document.getElementById('scanStatus');if(sm)sm.textContent=main;
+  const ss=document.getElementById('scanSub');if(ss)ss.textContent=sub||'';
+  const si=document.getElementById('rowCount');if(si)si.textContent=main;
+  const so=document.getElementById('sovText');if(so)so.textContent=main;
+  if(p!==undefined)setProg(p,true);
+}
+
+/* ══ VISUALS ════════════════════════════════════════════════════════════════ */
+function miniOB(s){
+  const g=s.type==='bull';
+  const pad=s.range*.5,vMin=s.swL-pad,tot=(s.swH+pad)-vMin;
+  const p=v=>clamp((1-(v-vMin)/tot)*100,2,97);
+  const oT=p(s.obT),oB=p(s.obB),iP=p(s.idm),prP=p(s.price);
+  return`<div class="obm"><div class="${g?'omg':'omr'}" style="top:${oT}%;height:${Math.max(oB-oT,3)}%"></div><div class="oil" style="top:${iP}%;background:${g?'var(--g)':'var(--r)'}"></div><div class="opm" style="left:${clamp(prP,5,90)}%;background:${g?'var(--g)':'var(--r)'}"></div></div>`;
+}
+function largeOB(s){
+  const g=s.type==='bull';
+  const pad=s.range*.6,vMin=s.swL-pad,tot=(s.swH+pad)-vMin;
+  const p=v=>clamp((1-(v-vMin)/tot)*100,2,97);
+  const oT=p(s.obT),oB=p(s.obB),iP=p(s.idm),prP=p(s.price);
+  const col=g?'var(--g)':'var(--r)';const obH=Math.max(oB-oT,4);
+  return`<div class="ob-chart">
+    <div class="ocax" style="position:absolute;right:4px;top:2px">${fp(s.swH)}</div>
+    <div class="ocax" style="position:absolute;right:4px;bottom:2px">${fp(s.swL)}</div>
+    <div class="ocz ${g?'oczg':'oczr'}" style="top:${oT}%;height:${obH}%"></div>
+    <div style="position:absolute;right:4px;top:${oT+obH/2-5}%;font-size:8px;font-weight:700;color:${col}">OB</div>
+    <div class="ocidm" style="top:${iP}%;background:${col}"></div>
+    <div class="octag" style="top:${clamp(iP+1,3,88)}%;color:${col};background:${g?'var(--gbg)':'var(--rbg)'}">IDM ${fp(s.idm)}</div>
+    <div class="ocprice" style="left:${clamp(prP,8,72)}%"><div class="ocdot" style="background:${col}"></div><span class="oclbl" style="color:${col}">${fp(s.price)}</span></div>
+  </div>`;
+}
+function scoreBar(sc){
+  const col=sc>=70?'var(--g)':sc>=50?'var(--y)':'var(--r)';
+  return`<div class="scw"><div class="scbg"><div class="scf" style="width:${sc}%;background:${col}"></div></div><span class="scn" style="color:${col}">${sc}</span></div>`;
+}
+function sparkLine(s,g){
+  const pts=[s.price/(1+s.h24/100),s.price/(1+s.h6/100),s.price/(1+s.h1/100),s.price/(1+s.m5/100),s.price];
+  const mn=Math.min(...pts),mx=Math.max(...pts),rng=mx-mn||1;
+  const W=64,H=22,pad=2;
+  const x=i=>pad+(i/4)*(W-pad*2);
+  const y=v=>H-pad-((v-mn)/rng)*(H-pad*2);
+  const path=pts.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const fp2=path+` L${x(4)},${H} L${x(0)},${H} Z`;
+  const col=g?'var(--g)':'var(--r)';
+  return`<svg class="spark" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="sg${g?'g':'r'}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${col}" stop-opacity=".15"/><stop offset="100%" stop-color="${col}" stop-opacity="0"/></linearGradient></defs><path d="${fp2}" fill="url(#sg${g?'g':'r'})"/><path d="${path}" fill="none" stroke="${col}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(4).toFixed(1)}" cy="${y(pts[4]).toFixed(1)}" r="2" fill="${col}"/></svg>`;
+}
+
+/* ══ STATS UPDATE ════════════════════════════════════════════════════════════ */
+function updateStats(){
+  TFS.forEach(tf=>{
+    const s=state[tf];
+    const bulls=s.results.filter(r=>r.setup.type==='bull').length;
+    const bears=s.results.filter(r=>r.setup.type==='bear').length;
+    const tot=s.results.length;
+    const key=tf==='5m'?'5':tf==='15m'?'15':'1h';
+    const el=tf==='5m'?'st5val':tf==='15m'?'st15val':'st1hval';
+    document.getElementById(el).textContent=tot||'0';
+    document.getElementById('st'+key+'bull').textContent=`▲ ${bulls}`;
+    document.getElementById('st'+key+'bear').textContent=`▼ ${bears}`;
+    document.getElementById('tbc'+key+'bull').textContent=`▲${bulls}`;
+    document.getElementById('tbc'+key+'bear').textContent=`▼${bears}`;
+    document.getElementById('nb'+tf).textContent=tot;
+  });
+  const allR=[...state['5m'].results,...state['15m'].results,...state['1h'].results];
+  document.getElementById('stTotal').textContent=allR.length||'0';
+  document.getElementById('stScanned').textContent=`${pairsScanned} pairs scanned`;
+  const best=allR.reduce((b,r)=>r.setup.score>(b?.setup.score||0)?r:b,null);
+  if(best){
+    document.getElementById('stBest').textContent=`${best.pair.baseToken?.symbol||'?'} · ${best.setup.score}`;
+    document.getElementById('stBestSub').textContent=`${best.setup.tf.toUpperCase()} · ${best.setup.type==='bull'?'▲ Bull':'▼ Bear'}`;
+  }
+}
+
+/* ══ RENDER TABLE ════════════════════════════════════════════════════════════ */
+function renderTable(){
+  const tf=activeTF;
+  const s=state[tf];
+  let fil=s.results.filter(r=>s.mode==='all'||r.setup.type===s.mode);
+  const sk=s.sortKey;
+  fil.sort((a,b)=>{
+    let v=0;
+    if(sk==='sym')v=(a.pair.baseToken?.symbol||'').localeCompare(b.pair.baseToken?.symbol||'');
+    else if(sk==='setup')v=a.setup.type.localeCompare(b.setup.type);
+    else if(sk==='dist')v=a.setup.dist-b.setup.dist;
+    else if(sk==='liq')v=(a.pair.liquidity?.usd||0)-(b.pair.liquidity?.usd||0);
+    else if(sk==='m5')v=a.setup.m5-b.setup.m5;
+    else if(sk==='h1')v=a.setup.h1-b.setup.h1;
+    else if(sk==='h6')v=a.setup.h6-b.setup.h6;
+    else if(sk==='h24')v=a.setup.h24-b.setup.h24;
+    else if(sk==='bs')v=a.setup.bs-b.setup.bs;
+    else if(sk==='score')v=a.setup.score-b.setup.score;
+    return v*s.sortDir;
+  });
+
+  document.getElementById('tblInfo').textContent=`${fil.length} of ${s.results.length}`;
+  document.getElementById('rowCount').textContent=`${fil.length} shown`;
+  const sb=document.getElementById('stbox'),tbl=document.getElementById('mtable');
+  if(!fil.length){
+    sb.style.display='flex';
+    sb.innerHTML=`<div class="sticon">◈</div><div class="sttxt">${tf.toUpperCase()} — No setups found</div><div class="stsub">Try lowering Min Liq or Swing filter.<br>Next scan in ${cdVal}s</div>`;
+    tbl.style.display='none';return;
+  }
+  sb.style.display='none';tbl.style.display='table';
+
+  document.getElementById('tbody').innerHTML=fil.map((item,i)=>{
+    const{pair,setup}=item,g=setup.type==='bull';
+    const base=pair.baseToken||{};
+    const liq=pair.liquidity?.usd||0;
+    const img=pair.info?.imageUrl||'';
+    const sym=(base.symbol||'?').slice(0,2);
+    const dexUrl=pair.url||`https://dexscreener.com/solana/${pair.pairAddress}`;
+    const buyPct=setup.buys+setup.sells>0?(setup.buys/(setup.buys+setup.sells)*100):50;
+    let flags='';
+    if(item.isNew)flags+=`<span class="tag t-new">NEW</span>`;
+    if(setup.hasSweep)flags+=`<span class="tag t-sweep">SWEEP</span>`;
+    if(setup.volSpike)flags+=`<span class="tag t-vsp">VOL↑</span>`;
+
+    // TF-specific columns
+    let col1,col2;
+    if(tf==='5m'){col1=pcc(setup.m5);col2=pcc(setup.h1);}
+    else if(tf==='15m'){col1=pcc(setup.h1);col2=pcc(setup.h6);}
+    else{col1=pcc(setup.h6);col2=pcc(setup.h24);}
+
+    return`<tr
+      class="${item.isNew?'nr':''}"
+      onclick="selectRow('${pair.pairAddress}',${i})"
+      ondblclick="window.open('${dexUrl}','_blank')"
+      title="Click — details · Double-click — DexScreener chart">
+      <td><div class="tcell">
+        <div class="timg">${img?`<img src="${img}" onerror="this.parentNode.textContent='${sym}'">`:`${sym}`}</div>
+        <div><div class="tsym">${base.symbol||'?'}${flags}</div><div class="tpair">${base.symbol||'?'}/SOL</div></div>
+      </div></td>
+      <td><span class="badge ${g?'b-bull':'b-bear'}">${g?'▲ Bull':'▼ Bear'}</span></td>
+      <td>${miniOB(setup)}</td>
+      <td style="color:${setup.dist<2?'var(--g)':setup.dist<5?'var(--y)':'var(--txt2)'};font-weight:600">${setup.dist.toFixed(2)}%</td>
+      <td>${fu(liq)}</td>
+      <td>${col1}</td>
+      <td>${col2}</td>
+      <td><div class="bsw"><div class="bsn" style="color:${g?'var(--g)':'var(--r)'}">${setup.bs.toFixed(1)}×</div><div class="bsbar"><div class="bsbuy" style="width:${buyPct}%"></div><div class="bssell" style="width:${100-buyPct}%"></div></div></div></td>
+      <td>${scoreBar(setup.score)}</td>
+    </tr>`;
+  }).join('');
+  updateStats();
+}
+
+/* ══ DETAIL PANEL ════════════════════════════════════════════════════════════ */
+function selectRow(addr,idx){
+  selAddr=addr;
+  document.querySelectorAll('tbody tr').forEach((r,i)=>r.classList.toggle('sel',i===idx));
+  const tf=activeTF;
+  const item=state[tf].results.find(r=>r.pair.pairAddress===addr);
+  if(!item)return;
+  const{pair,setup}=item,g=setup.type==='bull';
+  const base=pair.baseToken||{},quote=pair.quoteToken||{};
+  const dexUrl=pair.url||`https://dexscreener.com/solana/${pair.pairAddress}`;
+  const cfg=TF_CONFIG[tf];
+  document.getElementById('detTitle').textContent=`${base.symbol||'?'} · ${cfg.label}`;
+  document.getElementById('dempty').style.display='none';
+  const dc=document.getElementById('dcontent');dc.style.display='block';
+  dc.innerHTML=`
+  <div class="dsec">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div class="timg" style="width:30px;height:30px;font-size:11px">${pair.info?.imageUrl?`<img src="${pair.info.imageUrl}" onerror="this.style.display='none'">`:base.symbol?.slice(0,2)||'?'}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:13px">${base.symbol||'?'} / ${quote.symbol||'SOL'}</div><div style="font-size:10px;color:var(--txt3)">Solana · ${cfg.label} TF</div></div>
+      <span class="badge ${g?'b-bull':'b-bear'}">${g?'▲ Bull':'▼ Bear'}</span>
+    </div>
+    <span class="tf-label ${cfg.cls}" style="font-size:10px">${cfg.label} — ${cfg.desc.split('·')[0].trim()}</span>
+    <div style="margin-top:8px">${largeOB(setup)}</div>
+    <div class="drow"><span class="dk">IDM level</span><span class="dv">${fp(setup.idm)}</span></div>
+    <div class="drow"><span class="dk">IDM dist</span><span class="dv" style="color:${setup.dist<2?'var(--g)':'var(--y)'}">${setup.dist.toFixed(2)}%</span></div>
+    <div class="drow"><span class="dk">OB zone</span><span class="dv">${fp(setup.obB)} → ${fp(setup.obT)}</span></div>
+  </div>
+  <div class="dsec">
+    <div class="dtit">Signals</div>
+    <div>
+      <span class="sigtag ${g?'sig-g':'sig-r'}">${g?'▲ Green':'▼ Red'} touch</span>
+      <span class="sigtag ${g?'sig-g':'sig-r'}">IDM intact</span>
+      <span class="sigtag ${g?'sig-g':'sig-r'}">In OB</span>
+      ${setup.hasSweep?'<span class="sigtag sig-p">🌊 Sweep</span>':''}
+      ${setup.volSpike?'<span class="sigtag" style="background:#fff7ed;color:#ea580c;border-color:#fed7aa">🔥 Vol↑</span>':''}
+      <span class="sigtag sig-b">B/S ${setup.bs.toFixed(1)}×</span>
+    </div>
+    <div style="margin-top:7px" class="drow"><span class="dk">Score</span>${scoreBar(setup.score)}</div>
+  </div>
+  <div class="dsec">
+    <div class="dtit">Price Changes</div>
+    <div class="drow"><span class="dk">5m (touch TF)</span><span class="dv">${pcc(setup.m5)}</span></div>
+    <div class="drow"><span class="dk">1h</span><span class="dv">${pcc(setup.h1)}</span></div>
+    <div class="drow"><span class="dk">6h</span><span class="dv">${pcc(setup.h6)}</span></div>
+    <div class="drow"><span class="dk">24h</span><span class="dv">${pcc(setup.h24)}</span></div>
+  </div>
+  <div class="dsec">
+    <div class="dtit">Market</div>
+    <div class="drow"><span class="dk">Price</span><span class="dv">${fp(setup.price)}</span></div>
+    <div class="drow"><span class="dk">Liquidity</span><span class="dv">${fu(pair.liquidity?.usd)}</span></div>
+    <div class="drow"><span class="dk">Vol 24h</span><span class="dv">${fu(pair.volume?.h24)}</span></div>
+    <div class="drow"><span class="dk">Mkt Cap</span><span class="dv">${fu(pair.marketCap||pair.fdv)}</span></div>
+    <div class="drow"><span class="dk">Buys/Sells</span><span class="dv"><span style="color:var(--g)">${setup.buys}</span> / <span style="color:var(--r)">${setup.sells}</span></span></div>
+  </div>
+  <div class="dsec">
+    <a class="btn pri" href="${dexUrl}" target="_blank" rel="noopener" style="justify-content:center;text-decoration:none;width:100%">📊 Open Chart ↗</a>
+  </div>`;
+}
+
+/* ══ EXPORT CSV ══════════════════════════════════════════════════════════════ */
+function exportCSV(){
+  const all=[...state['5m'].results,...state['15m'].results,...state['1h'].results];
+  if(!all.length){toast('No data','y');return;}
+  const h=['TF','Symbol','Setup','Price','IDM%','Liq','Touch%','Prior%','BS','Score','Sweep','VolSpike','Address'];
+  const rows=all.map(({pair,setup})=>[setup.tf,pair.baseToken?.symbol||'',setup.type,setup.price,setup.dist.toFixed(2),pair.liquidity?.usd||0,setup.touch.toFixed(2),setup.prior.toFixed(2),setup.bs.toFixed(2),setup.score,setup.hasSweep?1:0,setup.volSpike?1:0,pair.baseToken?.address||'']);
+  const csv=[h,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=`idm_multitf_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  toast('📥 Exported!','g');
+}
+
+/* ══ LIVE LAUNCHES ═══════════════════════════════════════════════════════════ */
+function addCoin(item){
+  if(!item?.id||feedItems.find(x=>x.id===item.id))return;
+  feedItems.unshift(item);feedTotal++;feedRateCount++;
+  if(feedItems.length>500)feedItems.pop();
+  document.getElementById('stLaunch').textContent=feedTotal;
+  renderLaunches();
+}
+async function pollPump(){
+  const base='https://frontend-api.pump.fun/coins?offset=0&limit=50&sort=created_timestamp&order=DESC&includeNsfw=false';
+  let coins=null;
+  const pumpProxies=[
+    WORKER_URL+'?url='+encodeURIComponent(base),
+    base,
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(base),
+    'https://api.allorigins.win/get?url='+encodeURIComponent(base),
+    'https://corsproxy.io/?url='+encodeURIComponent(base),
+    'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(base),
+    'https://thingproxy.freeboard.io/fetch/'+base,
+  ];
+  for(const u of pumpProxies){
+    try{
+      const r=await fetch(u,{signal:AbortSignal.timeout(12000)});
+      if(!r.ok)continue;
+      const txt=await r.text();
+      let d;try{d=JSON.parse(txt);}catch(e){continue;}
+      if(d?.contents&&typeof d.contents==='string')try{d=JSON.parse(d.contents);}catch(e){continue;}
+      const a=Array.isArray(d)?d:(d.coins||d.data||[]);
+      if(a.length){coins=a;break;}
+    }catch(e){dbg('pump: '+String(e.message||'').slice(0,40),'wn');}
+  }
+    if(!coins){if(st)st.innerHTML='<span class="lchip-dot"></span>Pump ⚠';return;}
+  if(st)st.innerHTML='<span class="lchip-dot"></span>Pump 🟢';
+  for(const c of coins){
+    const ts=c.created_timestamp||Date.now();
+    if(ts<=lastPumpTs)continue;lastPumpTs=Math.max(lastPumpTs,ts);
+    addCoin({id:'p_'+(c.mint||''),src:'pump',symbol:c.symbol||'?',name:c.name||'?',mint:c.mint||'',img:c.image_uri||'',mc:c.usd_market_cap||0,liq:0,ts,hasLiq:false,priceChange:0,dexUrl:'https://dexscreener.com/solana/'+(c.mint||'')});
+  }
+}
+async function pollDex(){
+  const url='https://api.dexscreener.com/latest/dex/search?q=solana';
+  let pairs=null;
+  const dexProxies=[
+    WORKER_URL+'?url='+encodeURIComponent(url),
+    url,
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(url),
+    'https://api.allorigins.win/get?url='+encodeURIComponent(url),
+    'https://corsproxy.io/?url='+encodeURIComponent(url),
+    'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(url),
+    'https://thingproxy.freeboard.io/fetch/'+url,
+  ];
+  for(const u of dexProxies){
+    try{
+      const r=await fetch(u,{signal:AbortSignal.timeout(13000)});
+      if(!r.ok)continue;
+      const txt=await r.text();
+      let d;try{d=JSON.parse(txt);}catch(e){continue;}
+      if(d?.contents&&typeof d.contents==='string')try{d=JSON.parse(d.contents);}catch(e){continue;}
+      if(d?.pairs?.length){pairs=d.pairs;break;}
+    }catch(e){dbg('dex poll: '+String(e.message||'').slice(0,40),'wn');}
+  }
+    const st=document.getElementById('dexSt');
+  if(!pairs){if(st)st.innerHTML='<span class="lchip-dot"></span>Dex ⚠';return;}
+  if(st)st.innerHTML='<span class="lchip-dot"></span>Dex 🟢';
+  const now=Date.now();
+  for(const p of pairs){
+    if(p.chainId!=='solana')continue;
+    addCoin({id:'d_'+(p.pairAddress||''),src:'dex',symbol:p.baseToken?.symbol||'?',name:p.baseToken?.name||'?',mint:p.baseToken?.address||'',img:p.info?.imageUrl||'',mc:p.marketCap||0,liq:p.liquidity?.usd||0,ts:p.pairCreatedAt||now,hasLiq:(p.liquidity?.usd||0)>500,priceChange:p.priceChange?.m5||0,dexUrl:p.url||`https://dexscreener.com/solana/${p.pairAddress}`});
+  }
+}
+function setLF(f){
+  lfFilter=f;
+  ['all','pump','dex','liq'].forEach(k=>{const el=document.getElementById('lf-'+k);if(el)el.className='lf-btn'+(k===f?' on':'');});
+  renderLaunches();
+}
+function renderLaunches(){
+  let items=[...feedItems];
+  if(lfFilter==='pump')items=items.filter(x=>x.src==='pump');
+  else if(lfFilter==='dex')items=items.filter(x=>x.src==='dex');
+  else if(lfFilter==='liq')items=items.filter(x=>x.hasLiq||x.liq>0);
+  document.getElementById('launchTotal').textContent=feedTotal+' coins';
+  const sc=document.getElementById('lscroll');
+  if(!items.length){sc.innerHTML='<div class="lempty"><span style="font-size:20px;opacity:.2">📡</span>Waiting…</div>';return;}
+  sc.innerHTML=items.slice(0,60).map(item=>{
+    const ageMs=Date.now()-item.ts;
+    const ageStr=ageMs<60000?Math.floor(ageMs/1000)+'s':ageMs<3600000?Math.floor(ageMs/60000)+'m':Math.floor(ageMs/3600000)+'h';
+    const ageCls=ageMs<120000?'ca-hot':ageMs<3600000?'ca-warm':'ca-cool';
+    const sym=(item.symbol||'?').slice(0,3);
+    const chg=item.priceChange||0;
+    return`<div class="ct ${item.src==='pump'?'cpump':'cdex'}"
+      onclick="window.open('${item.dexUrl}','_blank')"
+      ondblclick="window.open('${item.dexUrl}','_blank')"
+      title="Double-click → DexScreener chart">
+      <span class="ct-arr">↗</span>
+      <div class="ct-h">
+        <div class="ct-img">${item.img?`<img src="${item.img}" onerror="this.parentNode.textContent='${sym}'">`:`${sym}`}</div>
+        <div class="ct-sym">${item.symbol||'?'}</div>
+        <span class="${item.src==='pump'?'ct-src ct-src-p':'ct-src ct-src-d'}">${item.src==='pump'?'🟣':'🔵'}</span>
+      </div>
+      <div><span class="ct-age ${ageCls}">${ageStr}</span> ${item.mc>0?`<span class="ct-mc">MC ${fu(item.mc)}</span>`:''}</div>
+      ${item.liq>0?`<div class="ct-liq">💧 ${fu(item.liq)}</div>`:'<div style="font-size:9px;color:var(--txt3)">No liq yet</div>'}
+      ${chg!==0?`<div class="${chg>=0?'up':'dn'}" style="font-size:9px">${chg>=0?'+':''}${chg.toFixed(1)}%</div>`:''}
+      ${item.liq>0?`<div class="ct-bar"><div class="ct-bar-f" style="width:${clamp(item.liq/2000*10,2,100)}%"></div></div>`:''}
+    </div>`;
+  }).join('');
+}
+function startFeed(){
+  pollPump();pumpTimer=setInterval(pollPump,8000);
+  pollDex();dexTimer=setInterval(pollDex,12000);
+  feedRateTimer=setInterval(()=>{document.getElementById('launchRate').textContent=feedRateCount+'/min';feedRateCount=0;},60000);
+  setInterval(renderLaunches,5000);
+}
+
+/* ══ SCAN BTN ════════════════════════════════════════════════════════════════ */
+function setScanBadge(on){
+  const i=document.getElementById('sbi'),t=document.getElementById('sbt');
+  if(on){i.innerHTML='<div class="spin" style="width:11px;height:11px;border-width:2px;display:inline-block;vertical-align:middle;border-color:rgba(255,255,255,.3);border-top-color:#fff"></div>';t.textContent='Scanning…';}
+  else{i.textContent='↻';t.textContent='Scan Now';}
+}
+
+/* ══ MAIN SCAN ═══════════════════════════════════════════════════════════════ */
+async function runScan(){
+  if(scanning)return;
+  scanning=true;
+  document.getElementById('scanBtn').disabled=true;
+  setScanBadge(true);
+  const isFirst=TFS.every(tf=>state[tf].results.length===0);
+  if(isFirst){document.getElementById('stbox').style.display='flex';document.getElementById('mtable').style.display='none';}
+  else{
+    if(!document.getElementById('sovBar')){
+      const bar=document.createElement('div');bar.id='sovBar';bar.className='sov';
+      bar.innerHTML='<div class="spin" style="width:12px;height:12px;border-width:2px;flex-shrink:0"></div><span id="sovText" class="sov-t">Scanning…</span>';
+      document.getElementById('tscroll').prepend(bar);
+    }
+  }
+  dbg('=== SCAN START ===','wn');
+  try{
+    const pairs=await fetchAllPairs();
+    window._lastPairs=pairs; // cache for sweep scanner
+    TFS.forEach(tf=>state[tf].prevSet=new Set(state[tf].results.map(r=>r.pair.pairAddress)));
+    updSt(`Detecting in ${pairs.length} pairs…`,`3 TFs`,88);
+    const fresh={};TFS.forEach(tf=>fresh[tf]=[]);
+    let checked=0;
+    for(const p of pairs){
+      for(const tf of TFS){const s=detectOB(p,tf);if(s)fresh[tf].push({pair:p,setup:s});}
+      checked++;
+      if(checked%25===0||checked===pairs.length)updSt(`Checking ${checked}/${pairs.length}`,`5M:${fresh['5m'].length} 15M:${fresh['15m'].length} 1H:${fresh['1h'].length}`,88+checked/pairs.length*11);
+    }
+    // Run CHoCH scanner on same pairs
+    chochResults=[];
+    for(const p of pairs){
+      const c=detectChoch(p);
+      if(c)chochResults.push({pair:p,choch:c});
+    }
+    dbg(`CHoCH: ${chochResults.length} bearish CHoCH found`,'ok');
+    // Run sweep scanner
+    sweepResults=[];
+    for(const p of pairs){
+      const sw=detectSweep(p);
+      if(sw)sweepResults.push({pair:p,sweep:sw});
+    }
+    dbg(`Sweep: ${sweepResults.length} candle low sweeps found`,'ok');
+    // Update combined badge
+    const sigTotal=chochResults.length+sweepResults.length;
+    ['nbSignals','tbcSignals'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=sigTotal;});
+
+    // Merge + alert new
+    TFS.forEach(tf=>{
+      const newAddrs=new Set(fresh[tf].map(r=>r.pair.pairAddress));
+      const brandNew=fresh[tf].filter(r=>!state[tf].prevSet.has(r.pair.pairAddress));
+      if(brandNew.length&&!isFirst)brandNew.forEach(r=>toast(`🎯 ${tf.toUpperCase()} ${r.setup.type==='bull'?'▲':'▼'} ${r.pair.baseToken?.symbol||'?'} (${r.setup.score})`,r.setup.type==='bull'?'g':'r',5000));
+      const merged=fresh[tf].map(nr=>({...nr,isNew:!state[tf].prevSet.has(nr.pair.pairAddress)}));
+      for(const old of state[tf].results){if(!newAddrs.has(old.pair.pairAddress)){const sc=(old.scanCount||1)+1;if(sc<=3)merged.push({...old,isNew:false,stale:true,scanCount:sc});}}
+      state[tf].results=merged;
+      dbg(`${tf.toUpperCase()}: ${fresh[tf].length} fresh · ${merged.length} total`,'ok');
+    });
+    const ov=document.getElementById('sovBar');if(ov)ov.remove();
+    setProg(100);setScanBadge(false);
+        setTimeout(()=>{switchTF(activeTF);updateStats();if(activeTF==='signals')renderSignalsTable();},150);
+  }catch(e){
+    dbg(`ERROR: ${e.message}`,'er');
+    const ov=document.getElementById('sovBar');if(ov)ov.remove();setScanBadge(false);
+    if(TFS.every(tf=>state[tf].results.length===0)){
+      document.getElementById('stbox').innerHTML=`<div class="sticon">⚠</div><div class="sttxt">API Connection Failed</div><div class="stsub">All CORS proxies failed.<br><b>Fix 1:</b> Open in Chrome or Edge<br><b>Fix 2:</b> Run <code style="background:var(--bg);padding:2px 5px;border-radius:3px;font-size:10px">npx serve .</code><br>Enable ⚙ Debug to see proxy logs</div><button class="btn pri" style="margin-top:12px" onclick="boot()">↻ Retry</button>`;
+      document.getElementById('stbox').style.display='flex';
+    }
+  }
+  setProg(0);scanning=false;
+  document.getElementById('scanBtn').disabled=false;
+  startCD();
+}
+
+/* ══ BOOT ════════════════════════════════════════════════════════════════════ */
+const WORKER = 'https://long-smoke-c771.singh-parmeet123.workers.dev';
+
+async function tryFetch(url) {
+  const enc = encodeURIComponent(url);
+
+  // These proxies are confirmed WORKING in your browser (tested 2026-05-20)
+  const proxies = [
+    { n:'direct',     u: url },
+    { n:'worker',     u: WORKER + '?url=' + enc },
+    { n:'allorigins', u: 'https://api.allorigins.win/raw?url=' + enc },
+    { n:'codetabs',   u: 'https://api.codetabs.com/v1/proxy?quest=' + enc },
+  ];
+
+  for(const p of proxies) {
+    try {
+      const r = await fetch(p.u, {
+        signal: AbortSignal.timeout(15000),
+        headers: { 'Accept': 'application/json' }
+      });
+      if(!r.ok) { dbg(p.n + ': HTTP ' + r.status, 'wn'); continue; }
+      const txt = await r.text();
+      if(!txt || txt.length < 5) { dbg(p.n + ': empty', 'wn'); continue; }
+      let d = JSON.parse(txt);
+      if(d && typeof d.contents === 'string') d = JSON.parse(d.contents);
+      if(d) { dbg('✓ ' + p.n, 'ok'); return d; }
+    } catch(e) {
+      dbg(p.n + ': ' + String(e.message||'').slice(0,60), 'wn');
+    }
+  }
+  return null;
+}
+
+async function dexGet(url, lbl='') {
+  dbg('GET ' + (lbl || url.split('/').slice(-1)[0].slice(0,30)), 'in');
+  return await tryFetch(url);
+}
+
+async function boot() {
+  if('Notification' in window && Notification.permission === 'default')
+    Notification.requestPermission();
+
+  startFeed();
+  switchTF('5m');
+
+  const st = document.getElementById('scanStatus');
+  const ss = document.getElementById('scanSub');
+  document.getElementById('stbox').style.display = 'flex';
+  document.getElementById('mtable').style.display = 'none';
+
+  st.textContent = 'Connecting to DexScreener…';
+  ss.textContent = 'Trying direct API + Worker + 2 proxies';
+  setProg(10, true);
+
+  const test = await tryFetch('https://api.dexscreener.com/latest/dex/search?q=SOL');
+
+  if(test && test.pairs) {
+    st.textContent = '✅ Connected! Starting scan…';
+    ss.textContent = test.pairs.length + ' pairs found in test';
+    setProg(100);
+    setTimeout(runScan, 400);
+    return;
+  }
+
+  // All failed
+  setProg(0);
+  document.getElementById('stbox').innerHTML = `
+    <div style="text-align:center;max-width:380px;padding:20px">
+      <div style="font-size:36px;opacity:.15;margin-bottom:12px">⚠</div>
+      <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:10px">
+        API Connection Failed
+      </div>
+      <div style="font-size:11px;color:var(--txt2);line-height:1.9;margin-bottom:16px">
+        Open the screener from <b>GitHub Pages</b> (https://)<br>
+        not as a local file (file://)<br><br>
+        <b>Your link:</b><br>
+        <a href="https://pms5566.github.io/idm-screener/"
+           style="color:var(--b);font-size:12px">
+          https://pms5566.github.io/idm-screener/
+        </a>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn pri" onclick="location.reload()"
+          style="height:32px;padding:0 16px">↻ Retry</button>
+        <button class="btn ico" onclick="toggleDebug()"
+          style="width:32px" title="Debug">⚙</button>
+      </div>
+    </div>`;
+  document.getElementById('scanBtn').disabled = false;
+  startCD();
+}
+
+boot();
