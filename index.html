@@ -2113,122 +2113,89 @@ const WORKER = 'https://long-smoke-c771.singh-parmeet123.workers.dev';
 
 async function tryFetch(url) {
   const enc = encodeURIComponent(url);
-  // All proxies to try in order
-  const attempts = [
-    // 1. Your Cloudflare Worker (most reliable)
-    { name:'Worker', url: WORKER + '?url=' + enc },
-    // 2. Direct (works when served via localhost or GitHub Pages)
-    { name:'Direct', url: url },
-    // 3-9. Public CORS proxies
-    { name:'Allorigins-raw', url:'https://api.allorigins.win/raw?url='+enc },
-    { name:'Allorigins-get', url:'https://api.allorigins.win/get?url='+enc, unwrap:true },
-    { name:'Corsproxy',      url:'https://corsproxy.io/?url='+enc },
-    { name:'Codetabs',       url:'https://api.codetabs.com/v1/proxy?quest='+enc },
-    { name:'Thingproxy',     url:'https://thingproxy.freeboard.io/fetch/'+url },
-    { name:'Cors-sh',        url:'https://cors.sh/'+url, h:{'x-cors-api-key':'temp_demo'} },
-    { name:'Crossorigin',    url:'https://api.crossorigin.me/?url='+enc },
+
+  // These proxies are confirmed WORKING in your browser (tested 2026-05-20)
+  const proxies = [
+    { n:'direct',     u: url },
+    { n:'worker',     u: WORKER + '?url=' + enc },
+    { n:'allorigins', u: 'https://api.allorigins.win/raw?url=' + enc },
+    { n:'codetabs',   u: 'https://api.codetabs.com/v1/proxy?quest=' + enc },
   ];
 
-  for(const a of attempts) {
+  for(const p of proxies) {
     try {
-      const r = await fetch(a.url, {
-        signal: AbortSignal.timeout(14000),
-        headers: { 'Accept':'application/json', ...(a.h||{}) }
+      const r = await fetch(p.u, {
+        signal: AbortSignal.timeout(15000),
+        headers: { 'Accept': 'application/json' }
       });
-      if(!r.ok) { dbg(a.name+': HTTP '+r.status,'wn'); continue; }
+      if(!r.ok) { dbg(p.n + ': HTTP ' + r.status, 'wn'); continue; }
       const txt = await r.text();
-      if(!txt || txt.length < 5) { dbg(a.name+': empty','wn'); continue; }
+      if(!txt || txt.length < 5) { dbg(p.n + ': empty', 'wn'); continue; }
       let d = JSON.parse(txt);
-      if(a.unwrap && d?.contents) d = JSON.parse(d.contents);
-      if(d) { dbg('✓ '+a.name,'ok'); return d; }
-    } catch(e) { dbg(a.name+': '+String(e.message||'').slice(0,50),'wn'); }
+      if(d && typeof d.contents === 'string') d = JSON.parse(d.contents);
+      if(d) { dbg('✓ ' + p.n, 'ok'); return d; }
+    } catch(e) {
+      dbg(p.n + ': ' + String(e.message||'').slice(0,60), 'wn');
+    }
   }
   return null;
 }
 
-// Override dexGet to use tryFetch
 async function dexGet(url, lbl='') {
-  dbg('GET '+(lbl||url.split('/').slice(-1)[0].slice(0,30)),'in');
+  dbg('GET ' + (lbl || url.split('/').slice(-1)[0].slice(0,30)), 'in');
   return await tryFetch(url);
 }
 
 async function boot() {
-  if('Notification' in window && Notification.permission==='default') Notification.requestPermission();
+  if('Notification' in window && Notification.permission === 'default')
+    Notification.requestPermission();
 
   startFeed();
   switchTF('5m');
 
-  // Update status
-  const sb = document.getElementById('stbox');
   const st = document.getElementById('scanStatus');
   const ss = document.getElementById('scanSub');
-  sb.style.display = 'flex';
+  document.getElementById('stbox').style.display = 'flex';
   document.getElementById('mtable').style.display = 'none';
 
-  // ── Step 1: Test Cloudflare Worker ────────────────────────────────────────
-  st.textContent = '🔄 Testing Cloudflare Worker…';
-  ss.textContent = WORKER;
-  setProg(15, true);
+  st.textContent = 'Connecting to DexScreener…';
+  ss.textContent = 'Trying direct API + Worker + 2 proxies';
+  setProg(10, true);
 
-  try {
-    const workerTest = await fetch(WORKER+'?url='+encodeURIComponent('https://api.dexscreener.com/latest/dex/search?q=SOL'), {
-      signal: AbortSignal.timeout(12000)
-    });
-    if(workerTest.ok) {
-      const j = await workerTest.json();
-      if(j?.pairs?.length) {
-        dbg('Worker test passed: '+j.pairs.length+' pairs','ok');
-        st.textContent = '✅ Connected via Worker!';
-        ss.textContent = 'Starting scan…';
-        setTimeout(runScan, 500);
-        return;
-      }
-    }
-    dbg('Worker returned: '+workerTest.status,'wn');
-  } catch(e) { dbg('Worker test: '+e.message,'wn'); }
+  const test = await tryFetch('https://api.dexscreener.com/latest/dex/search?q=SOL');
 
-  // ── Step 2: Try direct + all CORS proxies ─────────────────────────────────
-  st.textContent = '🔄 Trying CORS proxies…';
-  ss.textContent = 'Checking 9 proxy services…';
-  setProg(35, true);
-
-  const testResult = await tryFetch('https://api.dexscreener.com/latest/dex/search?q=SOL');
-  if(testResult?.pairs?.length) {
-    st.textContent = '✅ Connected!';
-    ss.textContent = 'Starting scan…';
-    setTimeout(runScan, 500);
+  if(test && test.pairs) {
+    st.textContent = '✅ Connected! Starting scan…';
+    ss.textContent = test.pairs.length + ' pairs found in test';
+    setProg(100);
+    setTimeout(runScan, 400);
     return;
   }
 
-  // ── All failed — show helpful error ───────────────────────────────────────
+  // All failed
   setProg(0);
-  sb.innerHTML = `
-    <div style="text-align:center;max-width:420px">
-      <div style="font-size:36px;opacity:.2;margin-bottom:12px">⚠</div>
-      <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:8px">Cannot reach DexScreener API</div>
-
-      <div style="background:var(--rbg);border:1px solid var(--rbr);border-radius:8px;padding:12px;margin-bottom:14px;font-size:11px;color:var(--r);text-align:left">
-        <b>Worker URL tried:</b><br>
-        <code style="font-size:10px;word-break:break-all">${WORKER}</code><br><br>
-        The worker may need to be redeployed with the new worker.js file.
+  document.getElementById('stbox').innerHTML = `
+    <div style="text-align:center;max-width:380px;padding:20px">
+      <div style="font-size:36px;opacity:.15;margin-bottom:12px">⚠</div>
+      <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:10px">
+        API Connection Failed
       </div>
-
-      <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;text-align:left">
-        <b>Quick fixes:</b><br><br>
-        <b>1. Redeploy worker</b> (get new worker.js from Claude)<br><br>
-        <b>2. Run locally</b> — open terminal in the screener folder:<br>
-        <code style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:11px;display:inline-block;margin:4px 0">npx serve .</code><br>
-        Then open <b>http://localhost:3000</b> in Chrome<br><br>
-        <b>3. Deploy to GitHub Pages</b> — works perfectly there
+      <div style="font-size:11px;color:var(--txt2);line-height:1.9;margin-bottom:16px">
+        Open the screener from <b>GitHub Pages</b> (https://)<br>
+        not as a local file (file://)<br><br>
+        <b>Your link:</b><br>
+        <a href="https://pms5566.github.io/idm-screener/"
+           style="color:var(--b);font-size:12px">
+          https://pms5566.github.io/idm-screener/
+        </a>
       </div>
-
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button class="btn pri" onclick="boot()" style="height:34px;padding:0 16px">↻ Retry</button>
-        <a class="btn" href="http://localhost:3000" target="_blank" style="height:34px;padding:0 14px;text-decoration:none">Open localhost:3000</a>
-        <button class="btn ico" onclick="toggleDebug()" style="width:34px" title="Show debug logs">⚙</button>
+        <button class="btn pri" onclick="location.reload()"
+          style="height:32px;padding:0 16px">↻ Retry</button>
+        <button class="btn ico" onclick="toggleDebug()"
+          style="width:32px" title="Debug">⚙</button>
       </div>
     </div>`;
-
   document.getElementById('scanBtn').disabled = false;
   startCD();
 }
